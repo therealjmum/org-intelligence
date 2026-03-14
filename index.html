@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Org Intelligence — Workforce Blueprint</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;--s1:#0f0f0f;--s2:#171717;--s3:#202020;--s4:#2a2a2a;
+  --b:rgba(255,255,255,.07);--bb:rgba(255,255,255,.13);--bbb:rgba(255,255,255,.2);
+  --t:#F0EDE8;--t2:#888;--t3:#484848;
+  --accent:#D97757;--adim:rgba(217,119,87,.16);
+  --human:#A78BFA;--hdim:rgba(167,139,250,.12);
+  --agent:#22D3EE;--qdim:rgba(34,211,238,.1);
+  --green:#34D399;--yellow:#FBBF24;--red:#F87171;
+  --r:8px;--rl:12px;
+  --font:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--t);font-family:var(--font);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ──────────────────────────────────────── */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;background:rgba(8,8,8,.97);border-bottom:1px solid var(--b);flex-shrink:0;z-index:50;gap:10px}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.logo{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#080808;flex-shrink:0}
+.app-name{font-size:13px;font-weight:700;letter-spacing:-.3px}
+.app-sub{font-size:9px;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-top:1px}
+/* Mode tabs */
+.mode-tabs{display:flex;background:var(--s2);border:1px solid var(--b);border-radius:7px;overflow:hidden;flex-shrink:0}
+.mode-tab{padding:5px 13px;border:none;background:transparent;color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .12s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.mode-tab.active{background:var(--s3);color:var(--t)}
+.mode-tab:hover:not(.active){color:var(--t)}
+/* Stats */
+.stats{display:flex;align-items:center;gap:12px;padding:0 12px;border-left:1px solid var(--b);border-right:1px solid var(--b)}
+.stat{display:flex;align-items:center;gap:4px;font-size:10px}
+.sdot{width:5px;height:5px;border-radius:50%}
+.sv{font-weight:700;font-size:11px}.sl{color:var(--t3)}
+/* Header right */
+.hdr-right{display:flex;align-items:center;gap:7px}
+.btn{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .12s;display:inline-flex;align-items:center;gap:5px;font-family:var(--font);white-space:nowrap}
+.btn-accent{background:var(--accent);color:#080808;border-color:var(--accent)}
+.btn-accent:hover{filter:brightness(1.1)}
+.btn-ghost{background:transparent;color:var(--t2);border-color:var(--bb)}
+.btn-ghost:hover{background:var(--s2);color:var(--t)}
+.btn-ghost.on{background:var(--adim);color:var(--accent);border-color:rgba(217,119,87,.3)}
+.btn-sm{padding:4px 9px;font-size:10px}
+.jmum{display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--s2);border:1px solid var(--bb);border-radius:20px}
+.jmum-star{color:var(--accent);font-size:10px}.jmum-text{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px}
+
+/* ── BODY / LAYOUT ───────────────────────────────── */
+.app-body{display:flex;flex:1;overflow:hidden;min-height:0}
+.main-view{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.view{display:none;flex:1;overflow-y:auto;overflow-x:hidden;flex-direction:column;min-height:0}
+.view.active{display:flex}
+#view-overview{overflow-y:auto}
+
+/* ── NOTES PANEL ─────────────────────────────────── */
+.notes-panel{width:255px;flex-shrink:0;border-left:1px solid var(--b);background:var(--s1);display:flex;flex-direction:column;overflow:hidden;transition:width .22s cubic-bezier(.4,0,.2,1),border-color .22s}
+.notes-panel.hidden{width:0;border-left-color:transparent}
+.notes-panel.hidden>*{opacity:0;pointer-events:none}
+.notes-float{position:fixed;right:0;top:50%;transform:translateY(-50%);background:var(--accent);border:none;border-radius:8px 0 0 8px;padding:12px 7px;cursor:pointer;display:none;flex-direction:column;align-items:center;gap:5px;z-index:40;writing-mode:vertical-rl;box-shadow:-3px 0 18px rgba(217,119,87,.35)}
+.notes-float:hover{filter:brightness(1.1)}
+.notes-float.show{display:flex}
+.notes-float-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#080808}
+.notes-hd{padding:11px 13px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.notes-hd-title{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t2)}
+.notes-btns{display:flex;gap:4px}
+.nbtn{padding:3px 7px;border-radius:4px;border:1px solid var(--b);background:transparent;color:var(--t3);font-size:10px;cursor:pointer;font-family:var(--font);transition:all .1s}
+.nbtn:hover{background:var(--s2);color:var(--t2)}
+textarea#notes{flex:1;padding:13px;background:transparent;border:none;resize:none;color:var(--t);font-family:var(--font);font-size:11px;line-height:1.65;outline:none;min-height:0}
+textarea#notes::placeholder{color:var(--t3);font-style:italic}
+textarea#notes::-webkit-scrollbar{width:3px}
+textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
+.notes-ft{padding:7px 13px;border-top:1px solid var(--b);flex-shrink:0;display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-style:italic}
+
+/* ── FOOTER ──────────────────────────────────────── */
+.footer{border-top:1px solid var(--b);padding:8px 18px;background:var(--s1);flex-shrink:0}
+.footer-inner{display:flex;align-items:center;gap:7px;overflow-x:auto}
+.footer-inner::-webkit-scrollbar{height:0}
+.flbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);white-space:nowrap;flex-shrink:0}
+.flink{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;background:var(--s2);border:1px solid var(--b);color:var(--t2);font-size:9.5px;text-decoration:none;transition:all .12s;white-space:nowrap;flex-shrink:0}
+.flink:hover{border-color:var(--accent);color:var(--accent);background:var(--s3)}
+
+/* ══════════════════════════════════════════════════
+   OVERVIEW MODE
+══════════════════════════════════════════════════ */
+.ov-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0;gap:12px}
+.ov-top-left h2{font-size:30px;font-weight:800;letter-spacing:-.8px}
+.ov-top-left p{font-size:12px;color:var(--t2);margin-top:3px}
+.build-cta{padding:10px 18px;font-size:12px;font-weight:700;background:var(--accent);color:#080808;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;font-family:var(--font);transition:filter .12s;flex-shrink:0}
+.build-cta:hover{filter:brightness(1.1)}
+.build-cta-icon{font-size:16px}
+
+/* Org health bar */
+.health-bar{display:flex;align-items:stretch;gap:12px;padding:10px 20px;border-bottom:1px solid var(--b);flex-shrink:0;overflow-x:auto}
+.health-bar::-webkit-scrollbar{height:0}
+.hm{display:flex;flex-direction:column;gap:2px;padding:8px 14px;background:var(--s2);border:1px solid var(--b);border-radius:7px;min-width:140px;flex-shrink:0}
+.hm-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t3)}
+.hm-value{font-size:16px;font-weight:700;letter-spacing:-.5px}
+.hm-sub{font-size:9px;color:var(--t3)}
+.hm.good .hm-value{color:var(--green)}
+.hm.warn .hm-value{color:var(--yellow)}
+.hm.info .hm-value{color:var(--accent)}
+.hm.agent-c .hm-value{color:var(--agent)}
+
+/* Dept tile grid */
+.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:16px 20px;align-items:start}
+.dept-tile{background:var(--s2);border:1px solid var(--b);border-radius:var(--rl);cursor:pointer;transition:border-color .12s,box-shadow .12s;display:block;align-self:start}
+.dept-tile:hover{border-color:var(--bb);box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.tile-head{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b);border-radius:var(--rl) var(--rl) 0 0}
+.tile-icon{font-size:18px;line-height:1;flex-shrink:0}
+.tile-info{flex:1;min-width:0}
+.tile-name{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.tile-desc{font-size:10px;color:var(--t2);margin-top:2px}
+.tile-arrow{font-size:14px;color:var(--t3);transition:transform .12s}
+.dept-tile:hover .tile-arrow{transform:translateX(2px)}
+.tile-stats{padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:11px;border-bottom:1px solid var(--b)}
+.tile-count{display:flex;align-items:center;gap:4px}
+.tile-ratio-track{flex:1;height:4px;background:var(--s4);border-radius:2px;overflow:hidden}
+.tile-ratio-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--human),var(--agent))}
+.tile-ratio-lbl{font-size:9px;color:var(--t2);white-space:nowrap}
+.tile-roles{padding:10px 16px 14px;display:flex;flex-direction:column;gap:5px}
+.tile-role-row{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--t)}
+.tile-role-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+/* Span badge tooltip */
+.span-tip{cursor:help;position:relative}
+.span-tip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#1e1e1e;color:var(--t);border:1px solid var(--bb);border-radius:6px;padding:6px 9px;font-size:9.5px;font-weight:400;white-space:nowrap;z-index:200;pointer-events:none;line-height:1.5;max-width:260px;white-space:normal;width:max-content;max-width:220px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+/* Recommendations section */
+.recs-section{padding:12px 20px;flex-shrink:0}
+.recs-title{font-size:13px;font-weight:700;letter-spacing:-.2px;color:var(--t);margin-bottom:16px}
+.recs-grid{display:flex;flex-wrap:wrap;gap:8px}
+.rec-card{padding:8px 12px;background:var(--s2);border:1px solid var(--b);border-left:3px solid var(--accent);border-radius:6px;font-size:10px;color:var(--t2);line-height:1.5;flex:1;min-width:200px}
+.rec-card strong{color:var(--accent);display:block;margin-bottom:2px;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ══════════════════════════════════════════════════
+   CHART MODE (swimlane)
+══════════════════════════════════════════════════ */
+.chart-toolbar{display:flex;align-items:center;gap:8px;padding:8px 18px;border-bottom:1px solid var(--b);flex-shrink:0;overflow-x:auto}
+.chart-toolbar::-webkit-scrollbar{height:0}
+.filter-group{display:flex;background:var(--s2);border:1px solid var(--b);border-radius:6px;overflow:hidden}
+.fbtn{padding:4px 11px;border:none;background:transparent;color:var(--t2);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .12s}
+.fbtn.active{background:var(--s3);color:var(--t)}
+.auto-legend{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:9px}
+.al-item{display:flex;align-items:center;gap:4px;color:var(--t3)}
+.al-dot{width:7px;height:7px;border-radius:50%}
+
+.chart-canvas{flex:1;overflow:auto;padding:18px}
+.chart-canvas::-webkit-scrollbar{width:5px;height:5px}
+.chart-canvas::-webkit-scrollbar-thumb{background:var(--bb);border-radius:3px}
+.dept-grid{display:flex;gap:12px;align-items:flex-start;min-width:max-content}
+
+/* dept column */
+.dc{width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:5px}
+.dc-head{padding:9px 11px;border-radius:var(--r);background:var(--s2);border:1px solid var(--b);display:flex;align-items:center;gap:7px;user-select:none;position:relative;overflow:hidden}
+.dc-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--dc-color,var(--accent))}
+.dc-icon{font-size:13px;line-height:1;flex-shrink:0}
+.dc-info{flex:1;min-width:0}
+.dc-name{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.dc-desc{font-size:8.5px;color:var(--t3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc-meta{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.dc-cnt{font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;background:var(--s3);color:var(--t2)}
+.dc-edbtn{opacity:0;background:none;border:none;color:var(--t3);cursor:pointer;font-size:9px;padding:2px 4px;border-radius:3px;transition:opacity .1s}
+.dc-head:hover .dc-edbtn{opacity:1}
+.dc-edbtn:hover{background:var(--s3);color:var(--t2)}
+.dc-tgl{background:none;border:none;color:var(--t3);cursor:pointer;font-size:9px;padding:0}
+.dc-tgl:hover{color:var(--t2)}
+
+.dz{display:flex;flex-direction:column;gap:4px;min-height:50px;padding:3px;border-radius:var(--r);border:1px dashed transparent;transition:all .12s}
+.dz.drag-over{border-color:var(--accent);background:var(--adim)}
+.dz.col{display:none}
+.add-btn{padding:7px;border-radius:6px;border:1px dashed var(--b);background:transparent;color:var(--t3);font-size:9px;cursor:pointer;text-align:center;transition:all .12s;font-family:var(--font);width:100%}
+.add-btn:hover{border-color:var(--bb);color:var(--t2);background:var(--s2)}
+
+/* role card */
+.rcard{padding:9px 10px;background:var(--s2);border:1px solid var(--b);border-radius:var(--r);cursor:grab;user-select:none;transition:transform .12s,box-shadow .12s,border-color .12s,background .12s;position:relative}
+.rcard:active{cursor:grabbing}
+/* border-left set inline per card: dept color for human, agent teal for agents */
+.rcard[data-type=agent]{border-left:2px solid var(--agent)}
+.rcard[data-type=human]:hover{background:var(--s3);border-color:var(--bb);box-shadow:0 4px 16px rgba(0,0,0,.25);transform:translateY(-1px)}
+.rcard[data-type=agent]:hover{background:var(--s3);border-color:var(--bb);box-shadow:0 4px 16px rgba(34,211,238,.08);transform:translateY(-1px)}
+.rcard.dragging{opacity:.3;transform:scale(.96)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:4px;margin-bottom:2px}
+.rc-title{font-size:10.5px;font-weight:600;line-height:1.3;flex:1}
+.badge{display:inline-flex;align-items:center;gap:2px;padding:1px 5px;border-radius:8px;font-size:8.5px;font-weight:700;flex-shrink:0;white-space:nowrap}
+.bh{background:var(--hdim);color:var(--human);border:1px solid rgba(167,139,250,.2)}
+.ba{background:var(--qdim);color:var(--agent);border:1px solid rgba(34,211,238,.18)}
+.rc-name{font-size:9.5px;color:var(--t2);margin-bottom:3px}
+.rc-cap{font-size:9px;color:var(--t3);line-height:1.4;margin-bottom:4px}
+.rc-tags{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:2px}
+.tag{padding:1px 4px;border-radius:3px;font-size:8.5px;background:var(--s3);color:var(--t3);border:1px solid var(--b)}
+/* Automation potential badge */
+.auto-badge{padding:1px 5px;border-radius:10px;font-size:8px;font-weight:700;letter-spacing:.3px}
+/* Automate/Augment/Advise framework — positive opportunity framing */
+.auto-low{background:rgba(167,139,250,.12);color:var(--human);border:1px solid rgba(167,139,250,.25)}   /* Advise  = human-essential, purple */
+.auto-mid{background:rgba(217,119,87,.14);color:var(--accent);border:1px solid rgba(217,119,87,.3)}    /* Augment = human+AI collab, orange */
+.auto-high{background:rgba(34,211,238,.12);color:var(--agent);border:1px solid rgba(34,211,238,.25)}   /* Automate = strong AI opp, teal */
+.auto-done{background:var(--qdim);color:var(--agent);border:1px solid rgba(34,211,238,.18)}
+.rc-actions{display:flex;gap:2px;margin-top:6px;opacity:0;transition:opacity .12s;border-top:1px solid var(--b);padding-top:5px}
+.rcard:hover .rc-actions{opacity:1}
+.rcbtn{padding:2px 6px;border-radius:3px;border:1px solid var(--b);background:var(--s1);color:var(--t3);font-size:8.5px;cursor:pointer;font-family:var(--font);transition:all .1s}
+.rcbtn:hover{background:var(--s2);color:var(--t2)}
+.rcbtn.del:hover{border-color:var(--red);color:var(--red)}
+
+/* Span of control warning */
+.span-warn{font-size:8px;padding:1px 5px;border-radius:10px;font-weight:700}
+.span-ok{background:rgba(52,211,153,.1);color:var(--green)}
+.span-warn-y{background:rgba(251,191,36,.1);color:var(--yellow)}
+.span-warn-r{background:rgba(248,113,113,.1);color:var(--red)}
+
+/* Orch layer */
+.orch{margin-top:16px;padding:14px 16px;background:var(--s1);border:1px solid rgba(34,211,238,.12);border-radius:var(--rl);position:relative;overflow:hidden}
+.orch::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--agent),transparent 70%);opacity:.5}
+.orch-hd{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.orch-title{font-size:8.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--agent)}
+.orch-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(34,211,238,.3),transparent)}
+.orch-sub{font-size:8.5px;color:var(--t3)}
+.orch-cards{display:flex;gap:8px;flex-wrap:wrap}
+.oc{padding:9px 11px;background:var(--s2);border:1px solid rgba(34,211,238,.1);border-left:2px solid var(--agent);border-radius:var(--r);min-width:160px;flex:0 0 auto}
+.oc-title{font-size:10px;font-weight:600;margin-bottom:2px}
+.oc-name{font-size:8.5px;color:var(--agent);font-weight:600;margin-bottom:3px}
+.oc-desc{font-size:9px;color:var(--t3);line-height:1.4;margin-bottom:5px}
+.oc-tags{display:flex;flex-wrap:wrap;gap:2px}
+.oc-tag{padding:1px 4px;border-radius:3px;font-size:8px;background:var(--qdim);color:var(--agent);border:1px solid rgba(34,211,238,.15)}
+
+/* ══════════════════════════════════════════════════
+   BUILD MODE (tree)
+══════════════════════════════════════════════════ */
+.build-toolbar{display:flex;align-items:center;gap:8px;padding:8px 18px;border-bottom:1px solid var(--b);flex-shrink:0}
+.build-hint{font-size:10px;color:var(--t3);margin-left:auto}
+.build-canvas{flex:1;overflow:auto;position:relative;display:flex;align-items:flex-start;justify-content:center}
+.build-canvas::-webkit-scrollbar{width:5px;height:5px}
+.build-canvas::-webkit-scrollbar-thumb{background:var(--bb);border-radius:3px}
+#tree-svg{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+.tree-root-wrap{display:flex;flex-direction:column;align-items:center;padding:36px 60px 60px;min-width:max-content;position:relative;z-index:1}
+
+/* tree node */
+.tnode{display:flex;flex-direction:column;align-items:center}
+.tchildren{display:flex;gap:18px;padding-top:46px;position:relative}
+.tcard{width:188px;background:var(--s2);border:1px solid var(--b);border-radius:var(--r);cursor:pointer;transition:border-color .12s,box-shadow .12s;position:relative;display:flex;flex-direction:column}
+.tcard[data-type=human]{border-left:3px solid var(--human)}
+.tcard[data-type=agent]{border-left:3px solid var(--agent)}
+.tcard:hover,.tcard.selected{border-color:var(--bb);box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.tcard.selected[data-type=human]{box-shadow:0 0 0 2px rgba(167,139,250,.3)}
+.tcard.selected[data-type=agent]{box-shadow:0 0 0 2px rgba(34,211,238,.25)}
+.tc-head{display:flex;align-items:center;gap:7px;padding:9px 10px 6px}
+.tc-type-icon{font-size:13px;flex-shrink:0}
+.tc-body{flex:1;min-width:0}
+.tc-title{font-size:10px;font-weight:600;line-height:1.3}
+.tc-name{font-size:9px;color:var(--t2);margin-top:1px}
+.tc-foot{display:flex;align-items:center;justify-content:space-between;padding:5px 10px 8px}
+.tc-auto-badge{font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px}
+.tc-actions{display:flex;gap:3px;opacity:0;transition:opacity .12s}
+.tcard:hover .tc-actions{opacity:1}
+.tc-add{width:18px;height:18px;border-radius:50%;border:1px solid var(--bb);background:var(--s3);color:var(--t2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all .1s;font-family:var(--font)}
+.tc-add:hover{background:var(--accent);color:#080808;border-color:var(--accent)}
+.tc-del{width:18px;height:18px;border-radius:50%;border:1px solid var(--b);background:var(--s3);color:var(--t3);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all .1s;font-family:var(--font)}
+.tc-del:hover{background:var(--red);color:#fff;border-color:var(--red)}
+/* type toggle on node */
+.tc-type-toggle{display:flex;width:100%;background:transparent;border:none;border-top:1px solid var(--b);padding:5px 10px;gap:0;cursor:pointer;font-family:var(--font)}
+.tt-opt{flex:1;padding:3px;font-size:8.5px;font-weight:700;border-radius:4px;text-align:center;color:var(--t3);transition:all .1s}
+.tt-opt.active.human{background:var(--hdim);color:var(--human)}
+.tt-opt.active.agent{background:var(--qdim);color:var(--agent)}
+/* Build mode right panel */
+.build-side{width:0;flex-shrink:0;border-left:1px solid var(--b);background:var(--s1);display:flex;flex-direction:column;overflow:hidden;transition:width .2s}
+.build-side.open{width:240px}
+.bs-head{padding:11px 13px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
+.bs-title{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t2)}
+.bs-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px}
+.bs-form{padding:13px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.bs-form::-webkit-scrollbar{width:3px}
+.bs-form::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:9px;font-weight:700;color:var(--t2);letter-spacing:.3px;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{padding:7px 10px;background:var(--s2);border:1px solid var(--bb);border-radius:5px;color:var(--t);font-family:var(--font);font-size:11px;outline:none;transition:border-color .12s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent)}
+.fg textarea{min-height:60px;resize:vertical}
+.fg select option{background:var(--s2)}
+.type-row{display:flex;background:var(--s2);border:1px solid var(--b);border-radius:6px;overflow:hidden}
+.type-btn{flex:1;padding:7px;border:none;background:transparent;color:var(--t2);font-size:10px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .12s;display:flex;align-items:center;justify-content:center;gap:4px}
+.type-btn.active.th{background:var(--hdim);color:var(--human)}
+.type-btn.active.ta{background:var(--qdim);color:var(--agent)}
+.auto-row{display:flex;gap:4px}
+.auto-opt{flex:1;padding:4px;border-radius:5px;border:1px solid var(--b);background:transparent;color:var(--t3);font-size:9px;font-weight:700;cursor:pointer;font-family:var(--font);text-align:center;transition:all .1s}
+.auto-opt.low.sel{background:rgba(52,211,153,.1);color:var(--green);border-color:rgba(52,211,153,.3)}
+.auto-opt.mid.sel{background:rgba(251,191,36,.1);color:var(--yellow);border-color:rgba(251,191,36,.3)}
+.auto-opt.high.sel{background:rgba(248,113,113,.1);color:var(--red);border-color:rgba(248,113,113,.3)}
+
+/* Empty build state */
+.build-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:60px;text-align:center;min-height:300px}
+.build-empty-icon{font-size:48px;opacity:.3}
+.build-empty-title{font-size:16px;font-weight:700;color:var(--t2)}
+.build-empty-sub{font-size:12px;color:var(--t3);max-width:280px;line-height:1.5}
+
+/* ── MODAL ───────────────────────────────────────── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.74);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(6px);animation:fi .15s ease}
+.modal{background:var(--s2);border:1px solid var(--bb);border-radius:var(--rl);padding:20px;width:370px;max-width:92vw;animation:su .18s ease}
+.modal-title{font-size:14px;font-weight:700;margin-bottom:14px}
+.mform{display:flex;flex-direction:column;gap:10px}
+.modal-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:4px}
+.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(248,113,113,.3);border-radius:6px;padding:5px 12px;font-size:10px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .12s}
+.btn-danger:hover{background:rgba(248,113,113,.1)}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes su{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="logo">AI</div>
+    <div>
+      <div class="app-name">Org Intelligence</div>
+      <div class="app-sub">Workforce Blueprint</div>
+    </div>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('overview')" id="tab-overview">◧ Overview</button>
+    <button class="mode-tab" onclick="setMode('chart')" id="tab-chart">⊞ Chart</button>
+    <button class="mode-tab" onclick="setMode('build')" id="tab-build">✦ Build</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="sdot" style="background:var(--human)"></div><span class="sv" id="s-h">0</span><span class="sl">human</span></div>
+    <div class="stat"><div class="sdot" style="background:var(--agent)"></div><span class="sv" id="s-a">0</span><span class="sl">AI agents</span></div>
+    <div class="stat"><span class="sv" id="s-r" style="color:var(--accent)">0%</span><span class="sl">automated</span></div>
+  </div>
+
+  <div class="hdr-right">
+    <button class="btn btn-ghost btn-sm notes-toggle-btn" id="notes-header-btn" onclick="toggleNotes()">✏ Notes</button>
+    <div class="jmum"><span class="jmum-star">✦</span><span class="jmum-text">jmum</span></div>
+  </div>
+</header>
+
+<!-- ═══ BODY ═══ -->
+<div class="app-body">
+<div class="main-view">
+
+<!-- ────────────────── OVERVIEW VIEW ────────────────── -->
+<div class="view active" id="view-overview">
+  <div class="ov-top">
+    <div class="ov-top-left">
+      <h2>Your AI Org at a Glance</h2>
+      <p>Build your workforce of the future, identifying opportunities to augment and automate with AI. Click any department to explore its team structure and roles.</p>
+    </div>
+    <button class="build-cta" onclick="startBuildOwn()">
+      <span class="build-cta-icon">🏗</span> Build My Own Org
+    </button>
+  </div>
+
+  <!-- Org health metrics -->
+  <div class="health-bar" id="health-bar"></div>
+
+  <!-- Department tiles -->
+  <div class="tile-grid" id="tile-grid"></div>
+
+  <!-- Expert recommendations -->
+  <div class="recs-section">
+    <div class="recs-title">💡 Org Design Recommendations</div>
+    <div class="recs-grid" id="recs-grid"></div>
+  </div>
+</div>
+
+<!-- ────────────────── CHART VIEW ────────────────── -->
+<div class="view" id="view-chart">
+  <div class="chart-toolbar">
+    <div class="filter-group">
+      <button class="fbtn active" onclick="setFilter('all')">All</button>
+      <button class="fbtn" onclick="setFilter('human')">♥ Human</button>
+      <button class="fbtn" onclick="setFilter('agent')">⚡ Agent</button>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="openAddRole()">+ Add Role</button>
+    <button class="btn btn-ghost btn-sm" onclick="openAddDept()">+ Dept</button>
+    <div class="auto-legend">
+      <div class="al-item"><div class="al-dot" style="background:var(--human)"></div>♥ Advise — human-essential</div>
+      <div class="al-item"><div class="al-dot" style="background:var(--accent)"></div>⊕ Augment — AI-assisted</div>
+      <div class="al-item"><div class="al-dot" style="background:var(--agent)"></div>🚀 Automate — strong AI opportunity</div>
+      <div class="al-item"><div class="al-dot" style="background:var(--agent);border-radius:2px"></div>⚡ AI-Native</div>
+    </div>
+  </div>
+  <div class="chart-canvas" id="chart-canvas">
+    <div style="min-width:max-content">
+      <div class="dept-grid" id="dept-grid"></div>
+      <div class="orch" id="orch-layer" style="margin-top:16px">
+        <div class="orch-hd">
+          <span class="orch-title">⟡ AI Orchestration Layer</span>
+          <div class="orch-line"></div>
+          <span class="orch-sub">Cross-functional AI systems serving all departments</span>
+        </div>
+        <div class="orch-cards" id="orch-cards"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── BUILD VIEW ────────────────── -->
+<div class="view" id="view-build" style="flex-direction:row">
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+    <div class="build-toolbar">
+      <button class="btn btn-accent btn-sm" onclick="addRootNode()" id="btn-add-root" style="display:none">+ Add CEO / Founder</button>
+      <button class="btn btn-ghost btn-sm" onclick="importFromChart()">↓ Import from Chart</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearBuild()">✕ Clear All</button>
+      <div class="build-hint">Click a node to edit · Click + to add a direct report · Drag to reorder</div>
+    </div>
+    <div class="build-canvas" id="build-canvas">
+      <svg id="tree-svg"></svg>
+      <div class="tree-root-wrap" id="tree-root-wrap"></div>
+    </div>
+  </div>
+  <!-- Build side panel -->
+  <div class="build-side" id="build-side">
+    <div class="bs-head">
+      <div class="bs-title" id="bs-title">Edit Role</div>
+      <button class="bs-close" onclick="closeSide()">✕</button>
+    </div>
+    <div class="bs-form" id="bs-form"></div>
+  </div>
+</div>
+
+</div><!-- /main-view -->
+
+<!-- ═══ NOTES PANEL ═══ -->
+<div class="notes-panel" id="notes-panel">
+  <div class="notes-hd">
+    <div class="notes-hd-title">✏ Notes</div>
+    <div class="notes-btns">
+      <button class="nbtn" onclick="copyNotes()" title="Copy">⎘</button>
+      <button class="nbtn" onclick="clearNotes()" title="Clear">✕</button>
+      <button class="nbtn" id="notes-chevron" onclick="toggleNotes()" style="font-size:12px;padding:2px 7px">›</button>
+    </div>
+  </div>
+  <textarea id="notes" placeholder="Track org changes here...
+
+Ideas to explore:
+• Replace SDR headcount with Pipeline agents ×3
+• CAIO reporting directly to board
+• Q2 target: 40% AI automation ratio
+• New dept: Customer Success
+
+[Moves logged automatically ↓]" oninput="saveNotes(this.value)"></textarea>
+  <div class="notes-ft"><span>Auto-saved</span><span id="note-chars">0 chars</span></div>
+</div>
+</div><!-- /app-body -->
+
+<!-- Notes float tab -->
+<button class="notes-float" id="notes-float" onclick="toggleNotes()">
+  <span style="font-size:12px">✏</span>
+  <span class="notes-float-lbl">Notes</span>
+</button>
+
+<!-- Modal mount -->
+<div id="modal-root"></div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="flbl">Frontier Reading ↗</div>
+    <a class="flink" href="https://x.com/karpathy" target="_blank" rel="noopener">𝕏 Karpathy · Software 2.0</a>
+    <a class="flink" href="https://karpathy.ai" target="_blank" rel="noopener">🌐 karpathy.ai</a>
+    <a class="flink" href="https://x.com/emollick" target="_blank" rel="noopener">𝕏 Ethan Mollick · AI + Work</a>
+    <a class="flink" href="https://www.oneusefulthing.org" target="_blank" rel="noopener">📖 One Useful Thing</a>
+    <a class="flink" href="https://x.com/darioamodei" target="_blank" rel="noopener">𝕏 Dario Amodei</a>
+    <a class="flink" href="https://x.com/sama" target="_blank" rel="noopener">𝕏 Sam Altman</a>
+    <a class="flink" href="https://hbr.org/topic/subject/artificial-intelligence" target="_blank" rel="noopener">📚 HBR · AI Strategy</a>
+    <a class="flink" href="https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai" target="_blank" rel="noopener">📊 McKinsey · Gen AI</a>
+    <a class="flink" href="https://x.com/benedictevans" target="_blank" rel="noopener">𝕏 Benedict Evans</a>
+    <a class="flink" href="https://www.anthropic.com/research" target="_blank" rel="noopener">🔬 Anthropic Research</a>
+  </div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════
+const DEPTS = [
+  {id:'exec',name:'Executive Team',short:'EXEC',color:'#D97757',icon:'★',desc:'C-Suite & Org Leadership',collapsed:false,roles:[
+    {id:'r1',title:'Chief Executive Officer',name:'Alex Chen',type:'human',tags:['Strategy','Vision'],level:'C-Suite'},
+    {id:'r2',title:'Chief Technology Officer',name:'Marcus Rivera',type:'human',tags:['Technology','Infra'],level:'C-Suite'},
+    {id:'r3',title:'Chief Product Officer',name:'Priya Sharma',type:'human',tags:['Product','UX'],level:'C-Suite'},
+    {id:'r4',title:'Chief Financial Officer',name:'David Park',type:'human',tags:['Finance'],level:'C-Suite'},
+    {id:'r5',title:'Chief Marketing Officer',name:'Sophie Laurent',type:'human',tags:['Brand','Growth'],level:'C-Suite'},
+    {id:'r6',title:'Chief AI Officer',name:'Yuki Tanaka',type:'human',tags:['AI','Ethics'],level:'C-Suite'},
+    {id:'r7',title:'Chief Operating Officer',name:'James Okafor',type:'human',tags:['Operations'],level:'C-Suite'},
+    {id:'r8',title:'Executive AI Copilot',name:'Atlas',type:'agent',tags:['Briefings','Intel'],cap:'Board prep, earnings summaries, competitive intel'},
+  ]},
+  {id:'eng',name:'Engineering',short:'ENG',color:'#3B82F6',icon:'⟨/⟩',desc:'Platform, AI/ML, Infrastructure',collapsed:false,roles:[
+    {id:'r9',title:'VP Engineering',name:'Lena Kowalski',type:'human',tags:['Leadership'],level:'VP'},
+    {id:'r10',title:'Eng Manager — Platform',name:'Ravi Gupta',type:'human',tags:['Platform'],level:'Manager'},
+    {id:'r11',title:'Eng Manager — AI/ML',name:'Chloe Wu',type:'human',tags:['ML'],level:'Manager'},
+    {id:'r12',title:'Senior Engineer',name:'Tom Fischer',type:'human',tags:['Backend','APIs'],level:'Senior'},
+    {id:'r13',title:'Senior Engineer',name:'Aisha Diallo',type:'human',tags:['Frontend'],level:'Senior'},
+    {id:'r14',title:'AI Code Assistant',name:'CodeGen',type:'agent',tags:['Code','PRs'],cap:'Reviews PRs, writes boilerplate, suggests refactors 24/7'},
+    {id:'r15',title:'AI Test Engineer',name:'TestBot',type:'agent',tags:['QA','Coverage'],cap:'Generates test suites, flags regressions automatically'},
+    {id:'r16',title:'AI DevOps Agent',name:'Deploy',type:'agent',tags:['CI/CD','Monitoring'],cap:'Automates deployments, monitors uptime & performance'},
+    {id:'r17',title:'AI Security Scanner',name:'Sentinel',type:'agent',tags:['Security','Audit'],cap:'Continuous vulnerability scanning and compliance checks'},
+  ]},
+  {id:'proddes',name:'Product & Design',short:'P&D',color:'#A855F7',icon:'◎✦',desc:'Strategy, Roadmap, UX & Design Systems',collapsed:false,roles:[
+    {id:'r18',title:'VP Product',name:'Nina Osei',type:'human',tags:['Strategy'],level:'VP'},
+    {id:'r24',title:'VP Design',name:'Carlos Mendez',type:'human',tags:['Creative Direction'],level:'VP'},
+    {id:'r19',title:'PM — Core',name:'Ben Alvarez',type:'human',tags:['Core Platform'],level:'Manager'},
+    {id:'r20',title:'PM — Growth',name:'Maya Patel',type:'human',tags:['Growth'],level:'Manager'},
+    {id:'r25',title:'Senior UX Designer',name:'Amara Johansson',type:'human',tags:['UX','Research'],level:'Senior'},
+    {id:'r26',title:'Brand Designer',name:'Leo Zhang',type:'human',tags:['Brand','Visual'],level:'Mid'},
+    {id:'r27',title:'Design Systems Lead',name:'Sara Novak',type:'human',tags:['Systems'],level:'Senior'},
+    {id:'r21',title:'AI Product Analyst',name:'Insight',type:'agent',tags:['Data','Analytics'],cap:'Mines user data, surfaces insights to shape roadmap'},
+    {id:'r22',title:'AI Roadmap Planner',name:'Compass',type:'agent',tags:['Planning'],cap:'Scores feature requests, synthesises customer feedback'},
+    {id:'r23',title:'AI User Researcher',name:'Empathy',type:'agent',tags:['Research'],cap:'Synthetic user interviews, transcript analysis'},
+    {id:'r28',title:'AI Design Assistant',name:'Palette',type:'agent',tags:['Generative'],cap:'Generates visual concepts, iterates mockups from briefs'},
+    {id:'r29',title:'AI A11y Auditor',name:'Aria',type:'agent',tags:['Accessibility'],cap:'Scans every design for accessibility issues pre-ship'},
+  ]},
+  {id:'sales',name:'Sales',short:'SALES',color:'#10B981',icon:'↗',desc:'Enterprise, SMB, Partnerships',collapsed:false,roles:[
+    {id:'r30',title:'VP Sales',name:'Rachel Kim',type:'human',tags:['Enterprise'],level:'VP'},
+    {id:'r31',title:'Account Executive',name:'Daniel Torres',type:'human',tags:['Enterprise','West'],level:'Senior'},
+    {id:'r32',title:'Account Executive',name:'Fiona Walsh',type:'human',tags:['Enterprise','East'],level:'Senior'},
+    {id:'r33',title:'Sales Dev Rep',name:'Owen Lee',type:'human',tags:['Outbound'],level:'Junior'},
+    {id:'r34',title:'AI Outbound Agent',name:'Pipeline',type:'agent',tags:['Prospecting'],cap:'Automates personalised outreach, qualifies inbound leads'},
+    {id:'r35',title:'AI Deal Coach',name:'Closer',type:'agent',tags:['Deal Intel'],cap:'Surfaces deal risks, suggests objection responses live'},
+    {id:'r36',title:'AI CRM Manager',name:'Sync',type:'agent',tags:['CRM'],cap:'Keeps CRM clean, auto-logs activity, generates call notes'},
+  ]},
+  {id:'mkt',name:'Marketing',short:'MKT',color:'#F59E0B',icon:'◉',desc:'Content, Growth, Brand',collapsed:false,roles:[
+    {id:'r37',title:'Head of Content',name:'Isabel Fernandez',type:'human',tags:['Content'],level:'Director'},
+    {id:'r38',title:'Growth Lead',name:'Finn Larsen',type:'human',tags:['Growth','Paid'],level:'Director'},
+    {id:'r39',title:'AI Content Creator',name:'Scribe',type:'agent',tags:['Blog','Social'],cap:'Drafts blog posts, social content and ad copy at scale'},
+    {id:'r40',title:'AI SEO Agent',name:'Rank',type:'agent',tags:['SEO'],cap:'Optimises content for search, monitors rankings'},
+    {id:'r41',title:'AI Campaign Manager',name:'Amplify',type:'agent',tags:['Paid','A/B'],cap:'Manages ad spend, runs A/B tests, reports on ROAS'},
+    {id:'r42',title:'AI Brand Monitor',name:'Signal',type:'agent',tags:['Sentiment'],cap:'Tracks brand mentions and share of voice continuously'},
+  ]},
+  {id:'finance',name:'Finance',short:'FIN',color:'#6366F1',icon:'⬡',desc:'FP&A, Accounting, Legal',collapsed:false,roles:[
+    {id:'r43',title:'VP Finance',name:'Hannah Brooks',type:'human',tags:['FP&A'],level:'VP'},
+    {id:'r44',title:'Financial Analyst',name:'Ethan Cross',type:'human',tags:['Modelling'],level:'Mid'},
+    {id:'r45',title:'Controller',name:'Mei Lin',type:'human',tags:['Accounting'],level:'Manager'},
+    {id:'r46',title:'AI Finance Assistant',name:'Ledger',type:'agent',tags:['Reconciliation'],cap:'Automates reconciliation, generates financial summaries'},
+    {id:'r47',title:'AI Forecasting Agent',name:'Oracle',type:'agent',tags:['Forecasting'],cap:'Scenario models, budget variance alerts in real-time'},
+  ]},
+  {id:'ops',name:'Operations',short:'OPS',color:'#14B8A6',icon:'⟳',desc:'IT, Workplace, Process',collapsed:false,roles:[
+    {id:'r48',title:'VP Operations',name:'Victor Nkosi',type:'human',tags:['IT','Process'],level:'VP'},
+    {id:'r49',title:'Ops Manager',name:'Clara Schmidt',type:'human',tags:['Process','Scaling'],level:'Manager'},
+    {id:'r59',title:'IT Manager',name:'Dev Patel',type:'human',tags:['IT','Infrastructure'],level:'Manager'},
+    {id:'r60',title:'Workplace Lead',name:'Suki Park',type:'human',tags:['Facilities','Vendor'],level:'Manager'},
+    {id:'r51',title:'AI Ops Analyst',name:'Streamline',type:'agent',tags:['Process Mining'],cap:'Identifies bottlenecks, recommends efficiency improvements'},
+    {id:'r53',title:'AI IT Support',name:'Helpdesk',type:'agent',tags:['IT','Tier-1'],cap:'Resolves tier-1 IT issues, provisions access instantly'},
+    {id:'r61',title:'AI Vendor Manager',name:'Procure',type:'agent',tags:['Procurement','Contracts'],cap:'Manages vendor renewals, benchmarks pricing, flags contract risks'},
+  ]},
+  {id:'people',name:'People & HR',short:'PEOPLE',color:'#F472B6',icon:'❋',desc:'Talent, Culture, Development',collapsed:false,roles:[
+    {id:'r54',title:'Chief People Officer',name:'Tanya Williams',type:'human',tags:['Culture','Strategy'],level:'C-Suite'},
+    {id:'r55',title:'Head of Talent',name:'Priya Mehta',type:'human',tags:['Hiring','TA'],level:'Director'},
+    {id:'r56',title:'L&D Lead',name:'Jordan Brooks',type:'human',tags:['Learning','Development'],level:'Manager'},
+    {id:'r52',title:'AI Onboarding Agent',name:'Welcome',type:'agent',tags:['Onboarding'],cap:'End-to-end new hire onboarding automation'},
+    {id:'r57',title:'AI People Analytics',name:'Pulse',type:'agent',tags:['Analytics','Retention'],cap:'Tracks engagement signals, flags attrition risk, models headcount scenarios'},
+    {id:'r58',title:'AI Learning Coach',name:'Mentor',type:'agent',tags:['L&D','Coaching'],cap:'Personalised learning paths, skill gap analysis, performance nudges'},
+  ]},
+];
+
+const ORCH = [
+  {id:'o1',title:'AI Data Platform',name:'Nexus',serves:['ALL'],desc:'Unified data access & real-time analytics across every function'},
+  {id:'o2',title:'AI Comms Hub',name:'Relay',serves:['ALL'],desc:'Summarises meetings, routes decisions, manages async threads'},
+  {id:'o3',title:'AI Compliance Engine',name:'Govern',serves:['FIN','OPS','EXEC'],desc:'Real-time regulatory compliance monitoring and audit reporting'},
+  {id:'o4',title:'AI Knowledge Base',name:'Memory',serves:['ALL'],desc:'Institutional memory — surfaces docs, decisions, prior context'},
+  {id:'o5',title:'AI Workflow Orchestrator',name:'Flow',serves:['ALL'],desc:'Coordinates multi-step cross-functional AI agent workflows'},
+  {id:'o6',title:'AI Anomaly Detector',name:'Radar',serves:['ENG','FIN','OPS'],desc:'Detects anomalies across systems, metrics, spending patterns'},
+];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+const S = {
+  mode: 'overview',
+  filter: 'all',
+  depts: JSON.parse(JSON.stringify(DEPTS)),
+  buildNodes: {},
+  buildRoot: null,
+  selectedNode: null,
+  editType: 'human',
+  editAuto: 'low',
+  idN: 300,
+};
+let dragSrc = null;
+
+// ════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ════════════════════════════════════════════════
+// EXPERT ANALYSIS
+// ════════════════════════════════════════════════
+function automationPotential(role) {
+  if (role.type === 'agent') return 'done';
+  const title = (role.title + ' ' + (role.tags||[]).join(' ')).toLowerCase();
+  const level = (role.level || '').toLowerCase();
+  if (['c-suite','vp','director'].includes(level)) return 'low';
+  if (/strategy|vision|culture|ethics|leadership|creative|brand|partnership|relationships/.test(title)) return 'low';
+  if (/reconcil|report|data entry|qa|test|documentation|scheduling|monitor|scan|audit|logging/.test(title)) return 'high';
+  return 'mid';
+}
+// Automate / Augment / Advise — McKinsey/BCG AI opportunity framework
+function autoBadgeHTML(auto) {
+  if (auto === 'done') return '<span class="auto-badge auto-done">⚡ AI-Native</span>';
+  if (auto === 'high') return '<span class="auto-badge auto-high">🚀 Automate</span>';
+  if (auto === 'mid')  return '<span class="auto-badge auto-mid">⊕ Augment</span>';
+  return '<span class="auto-badge auto-low">♥ Advise</span>';
+}
+function autoColor(auto) {
+  if (auto === 'done') return 'var(--agent)';
+  if (auto === 'high') return 'var(--agent)';   // teal = opportunity
+  if (auto === 'mid')  return 'var(--accent)';  // orange = collaboration
+  return 'var(--human)';                         // purple = human-essential
+}
+function calcStats() {
+  let h=0, a=0;
+  S.depts.forEach(d => d.roles.forEach(r => r.type==='human' ? h++ : a++));
+  a += ORCH.length;
+  return {h, a, total: h+a, pct: h+a > 0 ? Math.round(a/(h+a)*100) : 0};
+}
+function updateHeaderStats() {
+  const {h,a,pct} = calcStats();
+  document.getElementById('s-h').textContent = h;
+  document.getElementById('s-a').textContent = a;
+  document.getElementById('s-r').textContent = pct + '%';
+}
+function calcSpanOfControl(dept) {
+  const managers = dept.roles.filter(r => r.type==='human' && ['VP','Manager','Director','C-Suite'].includes(r.level||''));
+  if (managers.length === 0) return null;
+  const reports = dept.roles.filter(r => !['VP','C-Suite'].includes(r.level||''));
+  return managers.length > 0 ? +(reports.length / managers.length).toFixed(1) : null;
+}
+function deptHasAgents(dept) {
+  return dept.roles.some(r => r.type === 'agent');
+}
+function spanClass(span, hasAgents) {
+  if (span === null) return '';
+  const upper = hasAgents ? 15 : 10; // AI agents expand effective span
+  if (span <= 2) return 'span-warn-y';
+  if (span > upper) return 'span-warn-r';
+  return 'span-ok';
+}
+
+// ════════════════════════════════════════════════
+// MODE SWITCHING
+// ════════════════════════════════════════════════
+function setMode(mode) {
+  S.mode = mode;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-' + mode).classList.add('active');
+  document.getElementById('tab-' + mode).classList.add('active');
+  if (mode === 'overview') renderOverview();
+  if (mode === 'chart') renderChart();
+  if (mode === 'build') renderBuild();
+  updateHeaderStats();
+}
+
+// ════════════════════════════════════════════════
+// OVERVIEW MODE
+// ════════════════════════════════════════════════
+function renderOverview() {
+  renderHealthBar();
+  renderTiles();
+  renderRecs();
+}
+
+function renderHealthBar() {
+  const {h, a, pct} = calcStats();
+  // Avg span of control
+  let totalSpan = 0, spanCount = 0;
+  S.depts.forEach(d => {
+    const sp = calcSpanOfControl(d);
+    if (sp !== null) { totalSpan += sp; spanCount++; }
+  });
+  const avgSpan = spanCount > 0 ? (totalSpan/spanCount).toFixed(1) : '—';
+  const spanOk = avgSpan >= 4 && avgSpan <= 15; // wider with AI agents
+  // Count layers (rough: C-Suite, VP, Manager, IC = 3-4)
+  const layers = 4;
+  // Automation ratio
+  const autoOk = pct >= 20 && pct <= 60;
+
+  document.getElementById('health-bar').innerHTML = `
+    <div class="hm ${autoOk ? 'agent-c' : 'warn'}">
+      <div class="hm-label">AI Automation Ratio</div>
+      <div class="hm-value">${pct}%</div>
+      <div class="hm-sub">${autoOk ? '✓ Healthy range (20–60%)' : '⚠ Consider rebalancing'}</div>
+    </div>
+    <div class="hm ${spanOk ? 'good' : 'warn'}">
+      <div class="hm-label">Avg Span of Control</div>
+      <div class="hm-value">${avgSpan}</div>
+      <div class="hm-sub">${spanOk ? '✓ Good (5–15 with AI agents)' : '⚠ Review reporting structure'}</div>
+    </div>
+    <div class="hm info">
+      <div class="hm-label">Org Layers</div>
+      <div class="hm-value">${layers}</div>
+      <div class="hm-sub">✓ Lean structure (3–5 optimal)</div>
+    </div>
+    <div class="hm good">
+      <div class="hm-label">Total Workforce</div>
+      <div class="hm-value">${h + a}</div>
+      <div class="hm-sub">${h} human · ${a} AI agents</div>
+    </div>
+    <div class="hm info">
+      <div class="hm-label">Departments</div>
+      <div class="hm-value">${S.depts.length}</div>
+      <div class="hm-sub">Functional org structure</div>
+    </div>
+  `;
+}
+
+function renderTiles() {
+  const grid = document.getElementById('tile-grid');
+  const tiles = S.depts.map(dept => {
+    const h = dept.roles.filter(r=>r.type==='human').length;
+    const a = dept.roles.filter(r=>r.type==='agent').length;
+    const total = dept.roles.length;
+    const pct = total > 0 ? Math.round(a/total*100) : 0;
+    const preview = dept.roles.slice(0,4);
+    const span = calcSpanOfControl(dept);
+    const spanCl = spanClass(span, deptHasAgents(dept));
+    const hasAgents = deptHasAgents(dept);
+    const spanTip = span !== null
+      ? 'Span of control: ' + span + ' direct reports per manager. ' + (hasAgents ? 'AI agents expand healthy spans to 10–15 (vs 5–8 traditional).' : 'Traditional guideline: 5–8 direct reports per manager.')
+      : '';
+
+    const roleRows = preview.map(r => {
+      const auto = automationPotential(r);
+      const dot = r.type==='agent' ? 'var(--agent)' : autoColor(auto);
+      return '<div class="tile-role-row">'
+        + '<div class="tile-role-dot" style="background:' + dot + '"></div>'
+        + '<span>' + esc(r.title) + '</span>'
+        + '<span style="margin-left:auto;font-size:9px;color:var(--t2)">' + (r.type==='agent' ? '⚡' : '') + '</span>'
+        + '</div>';
+    }).join('');
+
+    const moreRow = total > 4
+      ? '<div style="font-size:9px;color:var(--t2);margin-top:3px">+' + (total-4) + ' more roles</div>'
+      : '';
+
+    const spanBadge = span !== null
+      ? '<span class="span-warn span-tip ' + spanCl + '" data-tip="' + esc(spanTip) + '" style="margin-left:4px;cursor:help">⊛ ' + span + '</span>'
+      : '';
+
+    return '<div class="dept-tile" onclick="drillInto(\'' + dept.id + '\')">'
+      + '<div class="tile-head">'
+      + '<span class="tile-icon" style="color:' + dept.color + '">' + esc(dept.icon) + '</span>'
+      + '<div class="tile-info">'
+      + '<div class="tile-name" style="color:' + dept.color + '">' + esc(dept.name) + '</div>'
+      + '<div class="tile-desc">' + esc(dept.desc) + '</div>'
+      + '</div>'
+      + '<span class="tile-arrow" style="color:' + dept.color + '">→</span>'
+      + '</div>'
+      + '<div class="tile-stats">'
+      + '<div class="tile-count"><span style="color:var(--human)">♥ ' + h + '</span></div>'
+      + '<div class="tile-count"><span style="color:var(--agent)">⚡ ' + a + '</span></div>'
+      + '<div class="tile-ratio-track" style="flex:1"><div class="tile-ratio-fill" style="width:' + pct + '%"></div></div>'
+      + '<div class="tile-ratio-lbl">' + pct + '% AI</div>'
+      + spanBadge
+      + '</div>'
+      + '<div class="tile-roles">' + roleRows + moreRow + '</div>'
+      + '</div>';
+  });
+  grid.innerHTML = tiles.join('');
+}
+
+function renderRecs() {
+  const {pct} = calcStats();
+  const recs = [
+    {title:'Automate · Augment · Advise', body:'The three AI opportunity tiers: Automate = hand the task entirely to an agent (repetitive, rules-based). Augment = human + AI working in tandem (knowledge work). Advise = AI provides data, human decides (strategic, relational). Tag every role to one tier before redesigning.'},
+    {title:'Wider Spans with AI Agents', body:'Traditional rule: 5–8 directs per manager. With AI handling coordination overhead — status updates, meeting prep, reporting, first-draft reviews — effective spans can safely reach 10–15. Recalibrate your norms department by department based on how much agent support each manager has.'},
+    {title:'The Player-Coach is Now the Default', body:'AI absorbs admin and coordination work, freeing every manager to contribute individually again. Design roles assuming managers spend 50–60% doing IC work themselves. This compresses layers, accelerates delivery, and keeps senior talent engaged in real problems rather than governance.'},
+    {title:'Org Layers & Design', body:'Target 3–5 layers CEO to front-line. Each extra layer costs ~25% in coordination overhead. As AI agents handle cross-team handoffs, orgs can run flatter. Test: can a team operate autonomously for a week without escalation? If yes, it may not need its own management layer.'},
+    {title:'AI Agent Placement', body:'Never create a standalone "AI team". Agents belong inside functional departments — each team owns and is accountable for its agents. Cross-cutting infrastructure (data, compliance, comms) sits in the Orchestration Layer. Distributed ownership drives faster iteration and clearer accountability.'},
+    {title:'Future-State Workforce Planning', body:'Build current-state, then model future-state: what does the org look like with 40% of operational roles automated or augmented? Present the human-vs-agent delta to leadership as a 12–24 month workforce roadmap with a reskilling path for displaced roles.'},
+  ];
+  document.getElementById('recs-grid').innerHTML = recs.map(r =>
+    `<div class="rec-card"><strong>${r.title}</strong>${r.body}</div>`
+  ).join('');
+}
+
+function drillInto(deptId) {
+  // Switch to chart mode, briefly highlight that dept
+  S.depts.forEach(d => d.collapsed = d.id !== deptId);
+  setMode('chart');
+  // Scroll to the dept column
+  setTimeout(() => {
+    const el = document.querySelector(`[data-dept-id="${deptId}"]`);
+    if (el) el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'});
+    // Expand it
+    const dept = S.depts.find(d => d.id === deptId);
+    if (dept) { dept.collapsed = false; renderChart(); }
+  }, 100);
+}
+
+// ════════════════════════════════════════════════
+// CHART MODE
+// ════════════════════════════════════════════════
+function renderChart() {
+  renderDepts();
+  renderOrch();
+  updateHeaderStats();
+}
+function renderDepts() {
+  const grid = document.getElementById('dept-grid');
+  grid.innerHTML = '';
+  S.depts.forEach(dept => {
+    const visible = S.filter==='all' ? dept.roles : dept.roles.filter(r=>r.type===S.filter);
+    const col = document.createElement('div');
+    col.className = 'dc';
+    col.dataset.deptId = dept.id;
+    const span = calcSpanOfControl(dept);
+    const spanCl = spanClass(span, deptHasAgents(dept));
+    col.innerHTML = `
+      <div class="dc-head" style="--dc-color:${dept.color}">
+        <span class="dc-icon" style="color:${dept.color}">${dept.icon}</span>
+        <div class="dc-info">
+          <div class="dc-name" style="color:${dept.color}">${dept.short}</div>
+          <div class="dc-desc">${dept.desc}</div>
+        </div>
+        <div class="dc-meta">
+          <span class="dc-cnt">${visible.length}</span>
+          ${span !== null ? `<span class="span-warn span-tip ${spanCl}" data-tip="Span of control: ${span} direct reports per manager. ${deptHasAgents(dept) ? 'With AI agents, healthy spans reach 10–15 (vs 5–8 traditional).' : 'Traditional guideline: 5–8 per manager.'}">⊛ ${span}</span>` : ''}
+          <button class="dc-edbtn" onclick="editDept('${dept.id}')">✎</button>
+          <button class="dc-tgl" onclick="toggleDept('${dept.id}')">${dept.collapsed?'▶':'▾'}</button>
+        </div>
+      </div>
+      <div class="dz ${dept.collapsed?'col':''}"
+           data-dept-id="${dept.id}"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${dept.id}')">
+        ${visible.map(r => cardHTML(r, dept.id)).join('')}
+        <button class="add-btn" onclick="openAddRole('${dept.id}')">+ add role</button>
+      </div>
+    `;
+    grid.appendChild(col);
+  });
+}
+function cardHTML(r, deptId) {
+  const isAgent = r.type==='agent';
+  const auto = automationPotential(r);
+  const dept = S.depts.find(d => d.id === deptId);
+  const deptColor = dept ? dept.color : 'var(--human)';
+  const borderStyle = isAgent ? '' : `border-left:2px solid ${deptColor};`;
+  // Human badge tinted to dept color
+  const humanBadgeStyle = `background:${deptColor}22;color:${deptColor};border:1px solid ${deptColor}44`;
+  return `
+    <div class="rcard" data-role-id="${r.id}" data-dept-id="${deptId}" data-type="${r.type}"
+         draggable="true" style="${borderStyle}"
+         ondragstart="onDragStart(event,'${r.id}','${deptId}')"
+         ondragend="onDragEnd(event)"
+         ondblclick="editRole('${r.id}','${deptId}')">
+      <div class="rc-top">
+        <div class="rc-title">${r.title}</div>
+        ${isAgent ? `<span class="badge ba">⚡ AI</span>` : `<span class="badge" style="${humanBadgeStyle}">♥</span>`}
+      </div>
+      <div class="rc-name">${r.name}</div>
+      ${isAgent && r.cap ? `<div class="rc-cap">${r.cap}</div>` : ''}
+      <div class="rc-tags">
+        ${r.level ? `<span class="tag">${r.level}</span>` : ''}
+        ${(r.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
+        ${autoBadgeHTML(auto)}
+      </div>
+      <div class="rc-actions">
+        <button class="rcbtn" onclick="editRole('${r.id}','${deptId}')">Edit</button>
+        <button class="rcbtn" onclick="dupeRole('${r.id}','${deptId}')">Dupe</button>
+        <button class="rcbtn del" onclick="rmRole('${r.id}','${deptId}')">Remove</button>
+      </div>
+    </div>
+  `;
+}
+function renderOrch() {
+  document.getElementById('orch-cards').innerHTML = ORCH.map(a => `
+    <div class="oc">
+      <div class="oc-title">⚡ ${a.title}</div>
+      <div class="oc-name">${a.name}</div>
+      <div class="oc-desc">${a.desc}</div>
+      <div class="oc-tags">${a.serves.map(s=>`<span class="oc-tag">${s}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════════════════════
+// BUILD MODE (tree)
+// ════════════════════════════════════════════════
+function renderBuild() {
+  const wrap = document.getElementById('tree-root-wrap');
+  const svg = document.getElementById('tree-svg');
+  svg.innerHTML = '';
+
+  if (!S.buildRoot || !S.buildNodes[S.buildRoot]) {
+    wrap.innerHTML = `
+      <div class="build-empty">
+        <div class="build-empty-icon">🏗</div>
+        <div class="build-empty-title">Start Building Your Org</div>
+        <div class="build-empty-sub">Add a CEO or Founder to begin. Then build out your reporting structure — human roles and AI agents alike.</div>
+        <button class="btn btn-accent" onclick="addRootNode()">+ Add CEO / Founder</button>
+      </div>
+    `;
+    return;
+  }
+
+  wrap.innerHTML = renderTreeNode(S.buildRoot, true);
+
+  // Draw SVG lines after layout
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById('build-canvas');
+    const wrapEl = document.getElementById('tree-root-wrap');
+    svg.style.width = wrapEl.scrollWidth + 'px';
+    svg.style.height = wrapEl.scrollHeight + 'px';
+    drawLines(svg, canvas);
+  });
+}
+
+function renderTreeNode(nodeId, isRoot) {
+  const n = S.buildNodes[nodeId];
+  if (!n) return '';
+  const isAgent = n.type==='agent';
+  const auto = n.automationPotential || 'low';
+  const autoColors = {low:'var(--green)',mid:'var(--yellow)',high:'var(--red)'};
+  const autoLabels = {low:'Low risk',mid:'Medium',high:'High risk'};
+  const childCount = (n.children||[]).length;
+  const spanWarn = childCount > 10 ? '⚠ Wide span' : childCount === 1 ? '△ Narrow' : '';
+  return `
+    <div class="tnode" data-nid="${nodeId}">
+      <div class="tcard ${S.selectedNode===nodeId?'selected':''}"
+           data-type="${n.type}" data-nid="${nodeId}"
+           onclick="selectNode('${nodeId}')">
+        <div class="tc-head">
+          <div class="tc-type-icon">${isAgent ? '⚡' : '♥'}</div>
+          <div class="tc-body">
+            <div class="tc-title">${n.title || 'Untitled Role'}</div>
+            <div class="tc-name">${n.name || 'Add name →'}</div>
+          </div>
+        </div>
+        <div class="tc-foot">
+          <span class="tc-auto-badge auto-${auto === 'done' ? 'done' : auto}"
+                style="background:${auto==='done'?'var(--qdim)':''}">
+            ${isAgent ? '⚡ Agent' : autoLabels[auto]||'Low risk'}
+          </span>
+          ${spanWarn ? `<span style="font-size:8px;color:var(--yellow)">${spanWarn}</span>` : ''}
+          <div class="tc-actions">
+            <button class="tc-add" onclick="event.stopPropagation();addChild('${nodeId}')" title="Add direct report">+</button>
+            ${!isRoot ? `<button class="tc-del" onclick="event.stopPropagation();removeNode('${nodeId}')" title="Remove">×</button>` : ''}
+          </div>
+        </div>
+        <button class="tc-type-toggle" onclick="event.stopPropagation();toggleNodeType('${nodeId}')" title="Toggle human/agent">
+          <span class="tt-opt human ${!isAgent?'active':''}" style="${!isAgent?'background:var(--hdim);color:var(--human)':''}">♥ Human</span>
+          <span class="tt-opt agent ${isAgent?'active':''}" style="${isAgent?'background:var(--qdim);color:var(--agent)':''}">⚡ Agent</span>
+        </button>
+      </div>
+      ${(n.children||[]).length > 0 ? `
+        <div class="tchildren">
+          ${(n.children||[]).map(cid => renderTreeNode(cid, false)).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function drawLines(svg, canvas) {
+  const canvasRect = canvas.getBoundingClientRect();
+  const scrollLeft = canvas.scrollLeft;
+  const scrollTop = canvas.scrollTop;
+
+  function draw(nodeId) {
+    const n = S.buildNodes[nodeId];
+    if (!n || !(n.children||[]).length) return;
+    const pEl = document.querySelector(`.tnode[data-nid="${nodeId}"] > .tcard`);
+    if (!pEl) return;
+    const pR = pEl.getBoundingClientRect();
+    const px = pR.left + pR.width/2 - canvasRect.left + scrollLeft;
+    const py = pR.bottom - canvasRect.top + scrollTop;
+
+    (n.children||[]).forEach(cid => {
+      const cEl = document.querySelector(`.tnode[data-nid="${cid}"] > .tcard`);
+      if (!cEl) return;
+      const cR = cEl.getBoundingClientRect();
+      const cx = cR.left + cR.width/2 - canvasRect.left + scrollLeft;
+      const cy = cR.top - canvasRect.top + scrollTop;
+      const midY = py + (cy - py) * 0.5;
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M ${px} ${py} C ${px} ${midY}, ${cx} ${midY}, ${cx} ${cy}`);
+      const isAgent = S.buildNodes[cid]?.type === 'agent';
+      path.setAttribute('stroke', isAgent ? 'rgba(34,211,238,.25)' : 'rgba(167,139,250,.2)');
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('fill', 'none');
+      svg.appendChild(path);
+      draw(cid);
+    });
+  }
+  if (S.buildRoot) draw(S.buildRoot);
+}
+
+function selectNode(nodeId) {
+  S.selectedNode = nodeId;
+  const n = S.buildNodes[nodeId];
+  if (!n) return;
+  // Open side panel
+  const side = document.getElementById('build-side');
+  side.classList.add('open');
+  document.getElementById('bs-title').textContent = 'Edit: ' + (n.title || 'Role');
+  S.editType = n.type;
+  S.editAuto = n.automationPotential || 'low';
+  document.getElementById('bs-form').innerHTML = `
+    <div class="fg"><label>Role Title</label><input id="bs-title-in" value="${n.title||''}" placeholder="e.g. Chief Technology Officer" oninput="updateNodeField('${nodeId}','title',this.value)" /></div>
+    <div class="fg"><label>Name</label><input id="bs-name-in" value="${n.name||''}" placeholder="e.g. Alex Chen" oninput="updateNodeField('${nodeId}','name',this.value)" /></div>
+    <div class="fg"><label>Type</label>
+      <div class="type-row">
+        <button id="bst-h" class="type-btn th ${n.type!=='agent'?'active':''}" onclick="setNodeType('${nodeId}','human')">♥ Human</button>
+        <button id="bst-a" class="type-btn ta ${n.type==='agent'?'active':''}" onclick="setNodeType('${nodeId}','agent')">⚡ AI Agent</button>
+      </div>
+    </div>
+    <div class="fg" id="bs-auto-fg" style="${n.type==='agent'?'display:none':''}">
+      <label>Automation Potential</label>
+      <div class="auto-row">
+        <button class="auto-opt low ${(n.automationPotential||'low')==='low'?'sel':''}" onclick="setNodeAuto('${nodeId}','low')">♥ Advise</button>
+        <button class="auto-opt mid ${n.automationPotential==='mid'?'sel':''}" onclick="setNodeAuto('${nodeId}','mid')">⊕ Augment</button>
+        <button class="auto-opt high ${n.automationPotential==='high'?'sel':''}" onclick="setNodeAuto('${nodeId}','high')">🚀 Automate</button>
+      </div>
+    </div>
+    ${n.type==='agent'?`<div class="fg"><label>Agent Capability</label><textarea placeholder="What does this agent do autonomously?" oninput="updateNodeField('${nodeId}','cap',this.value)">${n.cap||''}</textarea></div>`:''}
+    <div class="fg"><label>Department / Function</label><input value="${n.dept||''}" placeholder="e.g. Engineering" oninput="updateNodeField('${nodeId}','dept',this.value)" /></div>
+    <div style="margin-top:4px">
+      <button class="btn btn-accent btn-sm" style="width:100%" onclick="addChild('${nodeId}')">+ Add Direct Report</button>
+    </div>
+    <div style="margin-top:4px">
+      <button class="btn-danger" style="width:100%;padding:6px;border-radius:6px;font-size:10px;cursor:pointer;border:1px solid rgba(248,113,113,.3);background:transparent;color:var(--red);font-family:var(--font)" onclick="removeNode('${nodeId}')">Remove this role</button>
+    </div>
+  `;
+  renderBuild();
+}
+
+function closeSide() {
+  S.selectedNode = null;
+  document.getElementById('build-side').classList.remove('open');
+  renderBuild();
+}
+
+function updateNodeField(nodeId, field, value) {
+  if (S.buildNodes[nodeId]) {
+    S.buildNodes[nodeId][field] = value;
+    renderBuild();
+  }
+}
+function setNodeType(nodeId, type) {
+  if (!S.buildNodes[nodeId]) return;
+  S.buildNodes[nodeId].type = type;
+  selectNode(nodeId);
+}
+function setNodeAuto(nodeId, auto) {
+  if (!S.buildNodes[nodeId]) return;
+  S.buildNodes[nodeId].automationPotential = auto;
+  selectNode(nodeId);
+}
+function toggleNodeType(nodeId) {
+  const n = S.buildNodes[nodeId];
+  if (!n) return;
+  n.type = n.type === 'agent' ? 'human' : 'agent';
+  if (S.selectedNode === nodeId) selectNode(nodeId);
+  else renderBuild();
+}
+
+function addRootNode() {
+  const id = 'n' + (++S.idN);
+  S.buildNodes[id] = {id, title:'CEO / Founder', name:'Your Name', type:'human', automationPotential:'low', children:[]};
+  S.buildRoot = id;
+  renderBuild();
+  setTimeout(() => selectNode(id), 100);
+}
+
+function addChild(parentId) {
+  const id = 'n' + (++S.idN);
+  S.buildNodes[id] = {id, title:'New Role', name:'', type:'human', automationPotential:'low', children:[]};
+  if (!S.buildNodes[parentId]) return;
+  S.buildNodes[parentId].children = S.buildNodes[parentId].children || [];
+  S.buildNodes[parentId].children.push(id);
+  appendNote(`Added new direct report under "${S.buildNodes[parentId].title}"`);
+  renderBuild();
+  setTimeout(() => selectNode(id), 150);
+}
+
+function removeNode(nodeId) {
+  if (nodeId === S.buildRoot) {
+    if (!confirm('Remove root node? This will clear the entire tree.')) return;
+    S.buildRoot = null;
+    S.buildNodes = {};
+    S.selectedNode = null;
+    document.getElementById('build-side').classList.remove('open');
+    renderBuild();
+    return;
+  }
+  // Remove from parent's children
+  Object.values(S.buildNodes).forEach(n => {
+    if (n.children) n.children = n.children.filter(c => c !== nodeId);
+  });
+  // Recursively delete node and all descendants
+  function del(id) {
+    const n = S.buildNodes[id];
+    if (!n) return;
+    (n.children||[]).forEach(del);
+    delete S.buildNodes[id];
+  }
+  del(nodeId);
+  if (S.selectedNode === nodeId) { S.selectedNode = null; document.getElementById('build-side').classList.remove('open'); }
+  renderBuild();
+}
+
+function clearBuild() {
+  if (Object.keys(S.buildNodes).length > 0 && !confirm('Clear the entire org tree?')) return;
+  S.buildRoot = null;
+  S.buildNodes = {};
+  S.selectedNode = null;
+  document.getElementById('build-side').classList.remove('open');
+  renderBuild();
+}
+
+function importFromChart() {
+  if (Object.keys(S.buildNodes).length > 0 && !confirm('Import from Chart will replace your current Build. Continue?')) return;
+  S.buildNodes = {};
+  // Create root from exec team
+  const execDept = S.depts.find(d => d.id === 'exec');
+  if (!execDept) return;
+  const ceo = execDept.roles.find(r => r.level === 'C-Suite') || execDept.roles[0];
+  if (!ceo) return;
+  const rootId = 'n' + (++S.idN);
+  S.buildNodes[rootId] = {id:rootId, title:ceo.title, name:ceo.name, type:ceo.type, automationPotential:'low', children:[], dept:'Executive'};
+  S.buildRoot = rootId;
+  // Add other depts as direct reports
+  S.depts.forEach(dept => {
+    if (dept.id === 'exec') return;
+    const head = dept.roles.find(r => ['VP','Director','C-Suite'].includes(r.level||'')) || dept.roles[0];
+    if (!head) return;
+    const headId = 'n' + (++S.idN);
+    S.buildNodes[headId] = {id:headId, title:head.title, name:head.name, type:head.type, automationPotential:automationPotential(head), children:[], dept:dept.name};
+    S.buildNodes[rootId].children.push(headId);
+    // Add remaining roles as their directs
+    dept.roles.filter(r => r !== head).slice(0, 5).forEach(r => {
+      const rid = 'n' + (++S.idN);
+      S.buildNodes[rid] = {id:rid, title:r.title, name:r.name, type:r.type, automationPotential:automationPotential(r), children:[], dept:dept.name, cap:r.cap};
+      S.buildNodes[headId].children.push(rid);
+    });
+  });
+  renderBuild();
+  appendNote('Imported org structure from Chart mode');
+}
+
+function startBuildOwn() {
+  clearBuild();
+  setMode('build');
+}
+
+// ════════════════════════════════════════════════
+// CHART DRAG & DROP
+// ════════════════════════════════════════════════
+function onDragStart(e, roleId, deptId) {
+  dragSrc = {roleId, deptId};
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => e.target.classList.add('dragging'), 0);
+}
+function onDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.dz').forEach(z => z.classList.remove('drag-over'));
+}
+function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e, toId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragSrc || dragSrc.deptId === toId) return;
+  const from = S.depts.find(d => d.id === dragSrc.deptId);
+  const to   = S.depts.find(d => d.id === toId);
+  if (!from || !to) return;
+  const idx = from.roles.findIndex(r => r.id === dragSrc.roleId);
+  if (idx === -1) return;
+  const [role] = from.roles.splice(idx, 1);
+  to.roles.push(role);
+  appendNote(`Moved "${role.title}" → ${to.name}`);
+  renderChart();
+  dragSrc = null;
+}
+
+// ════════════════════════════════════════════════
+// FILTER
+// ════════════════════════════════════════════════
+function setFilter(f) {
+  S.filter = f;
+  document.querySelectorAll('.fbtn').forEach((b,i) => b.classList.toggle('active', ['all','human','agent'][i]===f));
+  renderChart();
+}
+function toggleDept(id) {
+  const d = S.depts.find(d => d.id === id);
+  if (d) { d.collapsed = !d.collapsed; renderChart(); }
+}
+
+// ════════════════════════════════════════════════
+// MODALS
+// ════════════════════════════════════════════════
+function showModal(html) {
+  S.editType = 'human';
+  document.getElementById('modal-root').innerHTML = `
+    <div class="mo" onclick="ovClick(event)"><div class="modal">${html}</div></div>`;
+}
+function closeModal() { document.getElementById('modal-root').innerHTML = ''; }
+function ovClick(e) { if (e.target.classList.contains('mo')) closeModal(); }
+
+function selType(t) {
+  S.editType = t;
+  document.getElementById('mt-h').className = `type-btn th ${t==='human'?'active':''}`;
+  document.getElementById('mt-a').className = `type-btn ta ${t==='agent'?'active':''}`;
+  const cap = document.getElementById('fg-cap');
+  if (cap) cap.style.display = t==='agent' ? '' : 'none';
+  const nl = document.getElementById('name-lbl');
+  if (nl) nl.textContent = t==='agent' ? 'Agent Code Name' : 'Person Name';
+}
+
+function openAddRole(deptId=null) {
+  const opts = S.depts.map(d=>`<option value="${d.id}" ${deptId===d.id?'selected':''}>${d.name}</option>`).join('');
+  showModal(`
+    <div class="modal-title">Add New Role</div>
+    <div class="mform">
+      <div class="fg"><label>Type</label><div class="type-row">
+        <button id="mt-h" class="type-btn th active" onclick="selType('human')">♥ Human</button>
+        <button id="mt-a" class="type-btn ta" onclick="selType('agent')">⚡ AI Agent</button>
+      </div></div>
+      <div class="fg"><label>Department</label><select id="m-dept">${opts}</select></div>
+      <div class="fg"><label>Title</label><input id="m-title" placeholder="e.g. Senior Engineer" /></div>
+      <div class="fg"><label id="name-lbl">Person Name</label><input id="m-name" placeholder="e.g. Sarah Kim" /></div>
+      <div class="fg" id="fg-cap" style="display:none"><label>Capability</label><textarea id="m-cap" placeholder="What does this agent do?"></textarea></div>
+      <div class="fg"><label>Tags (comma separated)</label><input id="m-tags" placeholder="Backend, APIs" /></div>
+      <div class="fg"><label>Level</label><input id="m-level" placeholder="VP, Senior, Manager, Junior" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-accent btn-sm" onclick="doAddRole()">Add Role</button>
+      </div>
+    </div>`);
+}
+function doAddRole() {
+  const deptId = document.getElementById('m-dept').value;
+  const title  = document.getElementById('m-title').value.trim();
+  const name   = document.getElementById('m-name').value.trim();
+  const capEl  = document.getElementById('m-cap');
+  const tags   = document.getElementById('m-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const level  = document.getElementById('m-level').value.trim();
+  if (!title) { alert('Please enter a title'); return; }
+  const dept = S.depts.find(d => d.id === deptId);
+  if (!dept) return;
+  const role = {id:'r'+(++S.idN), title, name: name||(S.editType==='agent'?'Agent':'TBH'), type:S.editType, tags, level, cap:capEl?capEl.value.trim():''};
+  dept.roles.push(role);
+  appendNote(`Added "${role.title}" to ${dept.name}`);
+  closeModal(); renderChart();
+}
+function editRole(roleId, deptId) {
+  const dept = S.depts.find(d=>d.id===deptId);
+  const role = dept?.roles.find(r=>r.id===roleId);
+  if (!role) return;
+  S.editType = role.type;
+  showModal(`
+    <div class="modal-title">Edit Role</div>
+    <div class="mform">
+      <div class="fg"><label>Type</label><div class="type-row">
+        <button id="mt-h" class="type-btn th ${role.type!=='agent'?'active':''}" onclick="selType('human')">♥ Human</button>
+        <button id="mt-a" class="type-btn ta ${role.type==='agent'?'active':''}" onclick="selType('agent')">⚡ AI Agent</button>
+      </div></div>
+      <div class="fg"><label>Title</label><input id="m-title" value="${role.title}" /></div>
+      <div class="fg"><label id="name-lbl">${role.type==='agent'?'Agent Code Name':'Person Name'}</label><input id="m-name" value="${role.name}" /></div>
+      <div class="fg" id="fg-cap" style="${role.type==='agent'?'':'display:none'}"><label>Capability</label><textarea id="m-cap">${role.cap||''}</textarea></div>
+      <div class="fg"><label>Tags</label><input id="m-tags" value="${(role.tags||[]).join(', ')}" /></div>
+      <div class="fg"><label>Level</label><input id="m-level" value="${role.level||''}" /></div>
+      <div class="modal-actions">
+        <button class="btn-danger" onclick="rmRole('${roleId}','${deptId}')">Remove Role</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-accent btn-sm" onclick="doSaveRole('${roleId}','${deptId}')">Save</button>
+      </div>
+    </div>`);
+}
+function doSaveRole(roleId, deptId) {
+  const dept = S.depts.find(d=>d.id===deptId);
+  const role = dept?.roles.find(r=>r.id===roleId);
+  if (!role) return;
+  role.title = document.getElementById('m-title').value.trim() || role.title;
+  role.name  = document.getElementById('m-name').value.trim() || role.name;
+  role.type  = S.editType;
+  const capEl = document.getElementById('m-cap');
+  if (capEl) role.cap = capEl.value.trim();
+  role.tags  = document.getElementById('m-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  role.level = document.getElementById('m-level').value.trim();
+  closeModal(); renderChart();
+}
+function openAddDept() {
+  showModal(`
+    <div class="modal-title">Add Department</div>
+    <div class="mform">
+      <div class="fg"><label>Name</label><input id="d-name" placeholder="e.g. Customer Success" /></div>
+      <div class="fg"><label>Short label</label><input id="d-short" placeholder="e.g. CS" maxlength="6" /></div>
+      <div class="fg"><label>Description</label><input id="d-desc" placeholder="e.g. Retention, Onboarding" /></div>
+      <div class="fg"><label>Accent Colour</label><input type="color" id="d-color" value="#A78BFA" style="height:38px;padding:3px" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-accent btn-sm" onclick="doAddDept()">Add</button>
+      </div>
+    </div>`);
+}
+function doAddDept() {
+  const name = document.getElementById('d-name').value.trim();
+  const short= document.getElementById('d-short').value.trim().toUpperCase();
+  const desc = document.getElementById('d-desc').value.trim();
+  const color= document.getElementById('d-color').value;
+  if (!name) { alert('Enter a name'); return; }
+  const icons = ['⊕','◈','⊛','◆','◐','⊡','⬟'];
+  S.depts.push({id:'dept'+(++S.idN), name, short:short||name.slice(0,4).toUpperCase(), color, icon:icons[S.idN%icons.length], desc:desc||name, collapsed:false, roles:[]});
+  closeModal(); renderChart(); if (S.mode==='overview') renderOverview();
+}
+function editDept(id) {
+  const d = S.depts.find(d=>d.id===id);
+  if (!d) return;
+  showModal(`
+    <div class="modal-title">Edit Department</div>
+    <div class="mform">
+      <div class="fg"><label>Name</label><input id="d-name" value="${d.name}" /></div>
+      <div class="fg"><label>Short</label><input id="d-short" value="${d.short}" maxlength="6" /></div>
+      <div class="fg"><label>Description</label><input id="d-desc" value="${d.desc}" /></div>
+      <div class="fg"><label>Colour</label><input type="color" id="d-color" value="${d.color}" style="height:38px;padding:3px" /></div>
+      <div class="modal-actions">
+        <button class="btn-danger" onclick="doDelDept('${id}')">Delete Dept</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-accent btn-sm" onclick="doSaveDept('${id}')">Save</button>
+      </div>
+    </div>`);
+}
+function doSaveDept(id) {
+  const d = S.depts.find(d=>d.id===id);
+  if (!d) return;
+  d.name = document.getElementById('d-name').value.trim()||d.name;
+  d.short= document.getElementById('d-short').value.trim().toUpperCase()||d.short;
+  d.desc = document.getElementById('d-desc').value.trim()||d.desc;
+  d.color= document.getElementById('d-color').value;
+  closeModal(); renderChart(); if (S.mode==='overview') renderOverview();
+}
+function doDelDept(id) {
+  const d = S.depts.find(d=>d.id===id);
+  if (d?.roles.length && !confirm(`"${d.name}" has ${d.roles.length} roles. Delete?`)) return;
+  S.depts = S.depts.filter(d=>d.id!==id);
+  closeModal(); renderChart(); if (S.mode==='overview') renderOverview();
+}
+function rmRole(roleId, deptId) {
+  const dept = S.depts.find(d=>d.id===deptId);
+  const role = dept?.roles.find(r=>r.id===roleId);
+  if (!role || !confirm(`Remove "${role.title}"?`)) return;
+  dept.roles = dept.roles.filter(r=>r.id!==roleId);
+  appendNote(`Removed "${role.title}" from ${dept.name}`);
+  closeModal(); renderChart(); if (S.mode==='overview') renderOverview();
+}
+function dupeRole(roleId, deptId) {
+  const dept = S.depts.find(d=>d.id===deptId);
+  const role = dept?.roles.find(r=>r.id===roleId);
+  if (!role) return;
+  dept.roles.push({...role, id:'r'+(++S.idN), name:role.name+' (2)'});
+  renderChart();
+}
+
+// ════════════════════════════════════════════════
+// NOTES
+// ════════════════════════════════════════════════
+function toggleNotes() {
+  const panel = document.getElementById('notes-panel');
+  const float = document.getElementById('notes-float');
+  const hbtn  = document.getElementById('notes-header-btn');
+  const chev  = document.getElementById('notes-chevron');
+  const hidden = panel.classList.toggle('hidden');
+  float.classList.toggle('show', hidden);
+  if (hbtn) hbtn.classList.toggle('on', !hidden);
+  if (chev) chev.textContent = hidden ? '‹' : '›';
+}
+function appendNote(msg) {
+  const el = document.getElementById('notes');
+  const ts = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  el.value = (el.value ? el.value.trimEnd()+'\n' : '') + `[${ts}] ${msg}`;
+  updateNoteCount(el.value);
+  saveNotes(el.value);
+}
+function saveNotes(v) { try{localStorage.setItem('oi-notes',v);}catch(e){} updateNoteCount(v); }
+function updateNoteCount(v) { const el=document.getElementById('note-chars'); if(el) el.textContent=v.length+' chars'; }
+function loadNotes() { try{const v=localStorage.getItem('oi-notes'); if(v){document.getElementById('notes').value=v;updateNoteCount(v);}}catch(e){} }
+function clearNotes() { if(!confirm('Clear notes?')) return; document.getElementById('notes').value=''; saveNotes(''); }
+function copyNotes() { navigator.clipboard.writeText(document.getElementById('notes').value); }
+
+// ════════════════════════════════════════════════
+// KEYBOARD
+// ════════════════════════════════════════════════
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closeModal(); closeSide(); }});
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+renderOverview();
+loadNotes();
+updateHeaderStats();
+// Notes hidden by default — user can open via header button or floating tab
+(function(){
+  const panel = document.getElementById('notes-panel');
+  const float = document.getElementById('notes-float');
+  const hbtn  = document.getElementById('notes-header-btn');
+  const chev  = document.getElementById('notes-chevron');
+  panel.classList.add('hidden');
+  float.classList.add('show');
+  if (hbtn) hbtn.classList.remove('on');
+  if (chev) chev.textContent = '‹';
+})();
+</script>
+</body>
+</html>
