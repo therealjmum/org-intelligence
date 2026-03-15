@@ -13,7 +13,8 @@
   --bg:#080808;--s1:#0f0f0f;--s2:#171717;--s3:#202020;--s4:#2a2a2a;
   --b:rgba(255,255,255,.07);--bb:rgba(255,255,255,.13);--bbb:rgba(255,255,255,.2);
   --t:#F0EDE8;--t2:#888;--t3:#484848;
-  --accent:#D97757;--adim:rgba(217,119,87,.16);
+  --accent:#4F7CF8;--adim:rgba(79,124,248,.16);
+  --orange:#D97757;--odim:rgba(217,119,87,.16);
   --human:#A78BFA;--hdim:rgba(167,139,250,.12);
   --agent:#22D3EE;--qdim:rgba(34,211,238,.1);
   --green:#34D399;--yellow:#FBBF24;--red:#F87171;
@@ -26,7 +27,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--font);display:flex;fl
 /* ── HEADER ──────────────────────────────────────── */
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;background:rgba(8,8,8,.97);border-bottom:1px solid var(--b);flex-shrink:0;z-index:50;gap:10px}
 .hdr-left{display:flex;align-items:center;gap:10px}
-.logo{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#080808;flex-shrink:0}
+.logo{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0}
 .app-name{font-size:13px;font-weight:700;letter-spacing:-.3px}
 .app-sub{font-size:9px;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-top:1px}
 /* Mode tabs */
@@ -42,7 +43,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--font);display:flex;fl
 /* Header right */
 .hdr-right{display:flex;align-items:center;gap:7px}
 .btn{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .12s;display:inline-flex;align-items:center;gap:5px;font-family:var(--font);white-space:nowrap}
-.btn-accent{background:var(--accent);color:#080808;border-color:var(--accent)}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-accent:hover{filter:brightness(1.1)}
 .btn-ghost{background:transparent;color:var(--t2);border-color:var(--bb)}
 .btn-ghost:hover{background:var(--s2);color:var(--t)}
@@ -65,7 +66,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--font);display:flex;fl
 .notes-float{position:fixed;right:0;top:50%;transform:translateY(-50%);background:var(--accent);border:none;border-radius:8px 0 0 8px;padding:12px 7px;cursor:pointer;display:none;flex-direction:column;align-items:center;gap:5px;z-index:40;writing-mode:vertical-rl;box-shadow:-3px 0 18px rgba(217,119,87,.35)}
 .notes-float:hover{filter:brightness(1.1)}
 .notes-float.show{display:flex}
-.notes-float-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#080808}
+.notes-float-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#fff}
 .notes-hd{padding:11px 13px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .notes-hd-title{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t2)}
 .notes-btns{display:flex;gap:4px}
@@ -88,10 +89,10 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 /* ══════════════════════════════════════════════════
    OVERVIEW MODE
 ══════════════════════════════════════════════════ */
-.ov-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0;gap:12px}
+.ov-top{display:flex;align-items:flex-start;justify-content:space-between;padding:48px 20px 76px;flex-shrink:0;gap:12px}
 .ov-top-left h2{font-size:30px;font-weight:800;letter-spacing:-.8px}
-.ov-top-left p{font-size:12px;color:var(--t2);margin-top:3px}
-.build-cta{padding:10px 18px;font-size:12px;font-weight:700;background:var(--accent);color:#080808;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;font-family:var(--font);transition:filter .12s;flex-shrink:0}
+.ov-top-left p{font-size:12px;color:var(--t2);margin-top:6px;line-height:1.6}
+.build-cta{padding:10px 18px;font-size:12px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;font-family:var(--font);transition:filter .12s;flex-shrink:0}
 .build-cta:hover{filter:brightness(1.1)}
 .build-cta-icon{font-size:16px}
 
@@ -108,14 +109,14 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 .hm.agent-c .hm-value{color:var(--agent)}
 
 /* Dept tile grid */
-.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:16px 20px;align-items:start}
-.dept-tile{background:var(--s2);border:1px solid var(--b);border-radius:var(--rl);cursor:pointer;transition:border-color .12s,box-shadow .12s;display:block;align-self:start}
+.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;padding:4px 20px 20px;align-items:stretch;grid-auto-rows:220px}
+.dept-tile{background:var(--s2);border:1px solid var(--b);border-radius:var(--rl);cursor:pointer;transition:border-color .12s,box-shadow .12s;display:flex;flex-direction:column;height:100%;overflow:hidden}
 .dept-tile:hover{border-color:var(--bb);box-shadow:0 4px 24px rgba(0,0,0,.5)}
 .tile-head{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b);border-radius:var(--rl) var(--rl) 0 0}
 .tile-icon{font-size:18px;line-height:1;flex-shrink:0}
 .tile-info{flex:1;min-width:0}
 .tile-name{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-.tile-desc{font-size:10px;color:var(--t2);margin-top:2px}
+.tile-desc{font-size:10px;color:var(--t2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tile-arrow{font-size:14px;color:var(--t3);transition:transform .12s}
 .dept-tile:hover .tile-arrow{transform:translateX(2px)}
 .tile-stats{padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:11px;border-bottom:1px solid var(--b)}
@@ -123,12 +124,12 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 .tile-ratio-track{flex:1;height:4px;background:var(--s4);border-radius:2px;overflow:hidden}
 .tile-ratio-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--human),var(--agent))}
 .tile-ratio-lbl{font-size:9px;color:var(--t2);white-space:nowrap}
-.tile-roles{padding:10px 16px 14px;display:flex;flex-direction:column;gap:5px}
+.tile-roles{padding:10px 16px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
 .tile-role-row{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--t)}
 .tile-role-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 /* Span badge tooltip */
 .span-tip{cursor:help;position:relative}
-.span-tip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#1e1e1e;color:var(--t);border:1px solid var(--bb);border-radius:6px;padding:6px 9px;font-size:9.5px;font-weight:400;white-space:nowrap;z-index:200;pointer-events:none;line-height:1.5;max-width:260px;white-space:normal;width:max-content;max-width:220px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+.span-tip:hover::after{content:attr(data-tip);position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#1e1e1e;color:var(--t);border:1px solid var(--bb);border-radius:6px;padding:6px 9px;font-size:9.5px;font-weight:400;z-index:9999;pointer-events:none;line-height:1.5;white-space:normal;width:max-content;max-width:220px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
 /* Recommendations section */
 .recs-section{padding:12px 20px;flex-shrink:0}
 .recs-title{font-size:13px;font-weight:700;letter-spacing:-.2px;color:var(--t);margin-bottom:16px}
@@ -151,12 +152,12 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 .chart-canvas{flex:1;overflow:auto;padding:18px}
 .chart-canvas::-webkit-scrollbar{width:5px;height:5px}
 .chart-canvas::-webkit-scrollbar-thumb{background:var(--bb);border-radius:3px}
-.dept-grid{display:flex;gap:12px;align-items:flex-start;min-width:max-content}
+.dept-grid{display:flex;gap:14px;align-items:flex-start;min-width:max-content;padding:0 8px}
 
 /* dept column */
-.dc{width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:5px}
-.dc-head{padding:9px 11px;border-radius:var(--r);background:var(--s2);border:1px solid var(--b);display:flex;align-items:center;gap:7px;user-select:none;position:relative;overflow:hidden}
-.dc-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--dc-color,var(--accent))}
+.dc{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.dc-head{padding:9px 11px;border-radius:var(--r);background:var(--s2);border:1px solid var(--b);display:flex;align-items:center;gap:7px;user-select:none;position:relative;overflow:visible}
+.dc-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--dc-color,var(--accent));border-radius:var(--r) 0 0 var(--r)}
 .dc-icon{font-size:13px;line-height:1;flex-shrink:0}
 .dc-info{flex:1;min-width:0}
 .dc-name{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
@@ -169,7 +170,7 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 .dc-tgl{background:none;border:none;color:var(--t3);cursor:pointer;font-size:9px;padding:0}
 .dc-tgl:hover{color:var(--t2)}
 
-.dz{display:flex;flex-direction:column;gap:4px;min-height:50px;padding:3px;border-radius:var(--r);border:1px dashed transparent;transition:all .12s}
+.dz{display:flex;flex-direction:column;gap:7px;min-height:50px;padding:3px;border-radius:var(--r);border:1px dashed transparent;transition:all .12s}
 .dz.drag-over{border-color:var(--accent);background:var(--adim)}
 .dz.col{display:none}
 .add-btn{padding:7px;border-radius:6px;border:1px dashed var(--b);background:transparent;color:var(--t3);font-size:9px;cursor:pointer;text-align:center;transition:all .12s;font-family:var(--font);width:100%}
@@ -190,13 +191,15 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 .ba{background:var(--qdim);color:var(--agent);border:1px solid rgba(34,211,238,.18)}
 .rc-name{font-size:9.5px;color:var(--t2);margin-bottom:3px}
 .rc-cap{font-size:9px;color:var(--t3);line-height:1.4;margin-bottom:4px}
+.rc-owner{font-size:8.5px;color:var(--agent);opacity:.8;margin-bottom:4px;display:flex;align-items:center;gap:3px}
+.rc-owner::before{content:'↑';font-size:9px}
 .rc-tags{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:2px}
 .tag{padding:1px 4px;border-radius:3px;font-size:8.5px;background:var(--s3);color:var(--t3);border:1px solid var(--b)}
 /* Automation potential badge */
 .auto-badge{padding:1px 5px;border-radius:10px;font-size:8px;font-weight:700;letter-spacing:.3px}
 /* Automate/Augment/Advise framework — positive opportunity framing */
 .auto-low{background:rgba(167,139,250,.12);color:var(--human);border:1px solid rgba(167,139,250,.25)}   /* Advise  = human-essential, purple */
-.auto-mid{background:rgba(217,119,87,.14);color:var(--accent);border:1px solid rgba(217,119,87,.3)}    /* Augment = human+AI collab, orange */
+.auto-mid{background:rgba(217,119,87,.14);color:var(--orange);border:1px solid rgba(217,119,87,.3)}    /* Augment = human+AI collab, orange */
 .auto-high{background:rgba(34,211,238,.12);color:var(--agent);border:1px solid rgba(34,211,238,.25)}   /* Automate = strong AI opp, teal */
 .auto-done{background:var(--qdim);color:var(--agent);border:1px solid rgba(34,211,238,.18)}
 .rc-actions{display:flex;gap:2px;margin-top:6px;opacity:0;transition:opacity .12s;border-top:1px solid var(--b);padding-top:5px}
@@ -345,8 +348,8 @@ textarea#notes::-webkit-scrollbar-thumb{background:var(--bb);border-radius:2px}
 <div class="view active" id="view-overview">
   <div class="ov-top">
     <div class="ov-top-left">
-      <h2>Your AI Org at a Glance</h2>
-      <p>Build your workforce of the future, identifying opportunities to augment and automate with AI. Click any department to explore its team structure and roles.</p>
+      <h2>Example AI Augmented Org</h2>
+      <p>Build your workforce of the future. Here's an example from Claude to spark inspiration. Click the tiles to learn more.</p>
     </div>
     <button class="build-cta" onclick="startBuildOwn()">
       <span class="build-cta-icon">🏗</span> Build My Own Org
@@ -478,81 +481,148 @@ Ideas to explore:
 // DATA
 // ════════════════════════════════════════════════
 const DEPTS = [
+  // ── EXECUTIVE  7h · 3a = 30% AI ─────────────────────────────────────
+  // AI operates as a distributed chief of staff — board prep, OKR tracking,
+  // market intel — giving the C-Suite leverage without adding headcount.
   {id:'exec',name:'Executive Team',short:'EXEC',color:'#D97757',icon:'★',desc:'C-Suite & Org Leadership',collapsed:false,roles:[
-    {id:'r1',title:'Chief Executive Officer',name:'Alex Chen',type:'human',tags:['Strategy','Vision'],level:'C-Suite'},
-    {id:'r2',title:'Chief Technology Officer',name:'Marcus Rivera',type:'human',tags:['Technology','Infra'],level:'C-Suite'},
-    {id:'r3',title:'Chief Product Officer',name:'Priya Sharma',type:'human',tags:['Product','UX'],level:'C-Suite'},
-    {id:'r4',title:'Chief Financial Officer',name:'David Park',type:'human',tags:['Finance'],level:'C-Suite'},
-    {id:'r5',title:'Chief Marketing Officer',name:'Sophie Laurent',type:'human',tags:['Brand','Growth'],level:'C-Suite'},
-    {id:'r6',title:'Chief AI Officer',name:'Yuki Tanaka',type:'human',tags:['AI','Ethics'],level:'C-Suite'},
-    {id:'r7',title:'Chief Operating Officer',name:'James Okafor',type:'human',tags:['Operations'],level:'C-Suite'},
-    {id:'r8',title:'Executive AI Copilot',name:'Atlas',type:'agent',tags:['Briefings','Intel'],cap:'Board prep, earnings summaries, competitive intel'},
+    {id:'r1', title:'Chief Executive Officer',  name:'Alex Chen',      type:'human',tags:['Strategy','Vision'],  level:'C-Suite'},
+    {id:'r2', title:'Chief Technology Officer', name:'Marcus Rivera',  type:'human',tags:['Technology','Infra'], level:'C-Suite'},
+    {id:'r6', title:'Chief AI Officer',         name:'Yuki Tanaka',    type:'human',tags:['AI','Ethics'],        level:'C-Suite'},
+    {id:'r7', title:'Chief Operating Officer',  name:'James Okafor',   type:'human',tags:['Operations'],         level:'C-Suite'},
+    {id:'r8',  title:'Executive AI Copilot',    name:'Atlas',          type:'agent',tags:['Briefings','Intel'],  cap:'Board prep, earnings summaries, competitive intel and scenario planning', owner:'CEO'},
+    {id:'r157',title:'AI Board Prep Agent',     name:'Deck',           type:'agent',tags:['Board','Investor'],   cap:'Drafts board decks, investor updates and exec briefing packs from live data', owner:'CEO'},
+    {id:'r158',title:'AI OKR & Strategy Tracker',name:'Lens',          type:'agent',tags:['OKRs','KPIs'],        cap:'Tracks company-wide OKRs and KPIs, surfaces blockers and market signals to leadership in real-time', owner:'Chief AI Officer'},
   ]},
-  {id:'eng',name:'Engineering',short:'ENG',color:'#3B82F6',icon:'⟨/⟩',desc:'Platform, AI/ML, Infrastructure',collapsed:false,roles:[
-    {id:'r9',title:'VP Engineering',name:'Lena Kowalski',type:'human',tags:['Leadership'],level:'VP'},
-    {id:'r10',title:'Eng Manager — Platform',name:'Ravi Gupta',type:'human',tags:['Platform'],level:'Manager'},
-    {id:'r11',title:'Eng Manager — AI/ML',name:'Chloe Wu',type:'human',tags:['ML'],level:'Manager'},
-    {id:'r12',title:'Senior Engineer',name:'Tom Fischer',type:'human',tags:['Backend','APIs'],level:'Senior'},
-    {id:'r13',title:'Senior Engineer',name:'Aisha Diallo',type:'human',tags:['Frontend'],level:'Senior'},
-    {id:'r14',title:'AI Code Assistant',name:'CodeGen',type:'agent',tags:['Code','PRs'],cap:'Reviews PRs, writes boilerplate, suggests refactors 24/7'},
-    {id:'r15',title:'AI Test Engineer',name:'TestBot',type:'agent',tags:['QA','Coverage'],cap:'Generates test suites, flags regressions automatically'},
-    {id:'r16',title:'AI DevOps Agent',name:'Deploy',type:'agent',tags:['CI/CD','Monitoring'],cap:'Automates deployments, monitors uptime & performance'},
-    {id:'r17',title:'AI Security Scanner',name:'Sentinel',type:'agent',tags:['Security','Audit'],cap:'Continuous vulnerability scanning and compliance checks'},
+  // ── ENGINEERING  35h · 14a = 29% AI ──────────────────────────────────
+  // AI pair-programming, automated testing, CI/CD, security and ops agents
+  // absorb ~40% of routine engineering work vs a traditional team.
+  // Every engineer has a full AI co-pilot stack across the SDLC.
+  {id:'eng',name:'Engineering',short:'ENG',color:'#3B82F6',icon:'⟨/⟩',desc:'Platform, AI/ML & Mobile — AI co-pilot embedded throughout',collapsed:false,roles:[
+    {id:'r2x', title:'Chief Technology Officer',    name:'Marcus Rivera',  type:'human',tags:['Technology','Infra'],    level:'C-Suite'},
+    {id:'r6x', title:'Chief AI Officer',            name:'Yuki Tanaka',    type:'human',tags:['AI','Ethics'],           level:'C-Suite'},
+    {id:'r9',  title:'Head of Engineering',         name:'Lena Kowalski',  type:'human',tags:['Leadership'],            level:'Director'},
+    {id:'r66', title:'Engineering Lead — Platform',  name:'Ravi Gupta',    type:'human',tags:['Platform'],               level:'Senior'},
+    {id:'r67', title:'Engineering Lead — AI/ML',    name:'Chloe Wu',      type:'human',tags:['ML'],                     level:'Senior'},
+    {id:'r68', title:'Engineering Lead — Mobile',   name:'Omar Hassan',   type:'human',tags:['Mobile'],                 level:'Senior'},
+    {id:'r71', title:'Staff Engineer',              name:'',              type:'human',tags:['Architecture','Systems'],  level:'Senior', count:2},
+    {id:'r72', title:'Senior Engineer — Platform',  name:'',              type:'human',tags:['Backend','APIs'],          level:'Senior', count:3},
+    {id:'r73', title:'Senior Engineer — AI/ML',     name:'',              type:'human',tags:['ML','Models'],             level:'Senior', count:3},
+    {id:'r74', title:'Senior Engineer — Mobile',    name:'',              type:'human',tags:['iOS','Android'],           level:'Senior', count:2},
+    {id:'r75', title:'Engineer — Platform',         name:'',              type:'human',tags:['Backend','Frontend'],      level:'Senior',    count:6},
+    {id:'r76', title:'Engineer — AI/ML',            name:'',              type:'human',tags:['ML','Python'],             level:'Senior',    count:4},
+    {id:'r77', title:'Engineer — Mobile',           name:'',              type:'human',tags:['Mobile'],                 level:'Senior',    count:2},
+    {id:'r78', title:'ML Engineer',                 name:'',              type:'human',tags:['Training','Models'],       level:'Senior',    count:3},
+    {id:'r79', title:'DevOps / SRE',                name:'',              type:'human',tags:['Infrastructure','CI/CD'],  level:'Senior',    count:2},
+    {id:'r80', title:'Security Engineer',           name:'',              type:'human',tags:['Security','Audit'],        level:'Senior',    count:2},
+    {id:'r127',title:'Data Engineer',               name:'',              type:'human',tags:['Data','Pipelines'],        level:'Senior',    count:2},
+    {id:'r14', title:'AI Code Assistant',           name:'CodeGen',       type:'agent',tags:['Code','PRs'],              cap:'Pair-programmes with every engineer — writes boilerplate, suggests refactors, reviews PRs 24/7',   owner:'Engineering Leads'},
+    {id:'r15', title:'AI Test Engineer',            name:'TestBot',       type:'agent',tags:['QA','Coverage'],           cap:'Generates full test suites, flags regressions and maintains coverage automatically',             owner:'Engineering Leads'},
+    {id:'r16', title:'AI DevOps Agent',             name:'Deploy',        type:'agent',tags:['CI/CD','Monitoring'],      cap:'Automates deployments, rollbacks and environment provisioning',                                 owner:'Engineering Lead — Platform'},
+    {id:'r17', title:'AI Security Scanner',         name:'Sentinel',      type:'agent',tags:['Security','Audit'],        cap:'Continuous vulnerability scanning, dependency CVEs and compliance checks',                       owner:'Head of Engineering'},
+    {id:'r81', title:'AI Documentation Writer',     name:'DocBot',        type:'agent',tags:['Docs','API'],              cap:'Auto-generates API docs, changelogs and wikis from code commits',                               owner:'Engineering Leads'},
+    {id:'r82', title:'AI Data Pipeline Agent',      name:'Stream',        type:'agent',tags:['Data','ETL'],              cap:'Monitors and auto-repairs data pipelines, surfaces quality issues in real-time',                 owner:'Engineering Lead — Platform'},
+    {id:'r130',title:'AI Architecture Advisor',     name:'Design',        type:'agent',tags:['Architecture','Patterns'], cap:'Reviews system designs, flags anti-patterns, suggests scalable architectures',                   owner:'CTO'},
+    {id:'r131',title:'AI Performance Monitor',      name:'Uptime',        type:'agent',tags:['Performance','SLA'],       cap:'24/7 performance monitoring, capacity planning alerts, SLA breach prediction',                   owner:'Head of Engineering'},
+    {id:'r150',title:'AI Code Reviewer',            name:'Critiquer',     type:'agent',tags:['Code Review','Standards'], cap:'Async PR review — enforces code standards, catches logic errors, scores readability',            owner:'Engineering Leads'},
+    {id:'r151',title:'AI Incident Response',        name:'Triage',        type:'agent',tags:['On-Call','Runbooks'],      cap:'On-call automation — routes alerts, executes runbooks, reduces MTTR by 60%+',                    owner:'Head of Engineering'},
+    {id:'r152',title:'AI ML Ops Agent',             name:'Vortex',        type:'agent',tags:['MLOps','Experiments'],     cap:'Manages model training pipelines, tracks experiments, detects model drift automatically',          owner:'Engineering Lead — AI/ML'},
+    {id:'r153',title:'AI Dependency Manager',       name:'Graph',         type:'agent',tags:['Dependencies','CVEs'],     cap:'Tracks all library updates, flags security patches and breaking changes before they land',         owner:'Engineering Lead — Platform'},
+    {id:'r160',title:'AI Observability Agent',      name:'Trace',         type:'agent',tags:['Tracing','RootCause'],     cap:'Distributed tracing, log correlation and automated root cause analysis across services',           owner:'Head of Engineering'},
+    {id:'r161',title:'AI Sprint Planner',           name:'Scope',         type:'agent',tags:['Sprint','Velocity'],       cap:'AI-driven sprint planning — story sizing, capacity matching, velocity forecasting',               owner:'Head of Engineering'},
   ]},
-  {id:'proddes',name:'Product & Design',short:'P&D',color:'#A855F7',icon:'◎✦',desc:'Strategy, Roadmap, UX & Design Systems',collapsed:false,roles:[
-    {id:'r18',title:'VP Product',name:'Nina Osei',type:'human',tags:['Strategy'],level:'VP'},
-    {id:'r24',title:'VP Design',name:'Carlos Mendez',type:'human',tags:['Creative Direction'],level:'VP'},
-    {id:'r19',title:'PM — Core',name:'Ben Alvarez',type:'human',tags:['Core Platform'],level:'Manager'},
-    {id:'r20',title:'PM — Growth',name:'Maya Patel',type:'human',tags:['Growth'],level:'Manager'},
-    {id:'r25',title:'Senior UX Designer',name:'Amara Johansson',type:'human',tags:['UX','Research'],level:'Senior'},
-    {id:'r26',title:'Brand Designer',name:'Leo Zhang',type:'human',tags:['Brand','Visual'],level:'Mid'},
-    {id:'r27',title:'Design Systems Lead',name:'Sara Novak',type:'human',tags:['Systems'],level:'Senior'},
-    {id:'r21',title:'AI Product Analyst',name:'Insight',type:'agent',tags:['Data','Analytics'],cap:'Mines user data, surfaces insights to shape roadmap'},
-    {id:'r22',title:'AI Roadmap Planner',name:'Compass',type:'agent',tags:['Planning'],cap:'Scores feature requests, synthesises customer feedback'},
-    {id:'r23',title:'AI User Researcher',name:'Empathy',type:'agent',tags:['Research'],cap:'Synthetic user interviews, transcript analysis'},
-    {id:'r28',title:'AI Design Assistant',name:'Palette',type:'agent',tags:['Generative'],cap:'Generates visual concepts, iterates mockups from briefs'},
-    {id:'r29',title:'AI A11y Auditor',name:'Aria',type:'agent',tags:['Accessibility'],cap:'Scans every design for accessibility issues pre-ship'},
+  // ── PRODUCT & DESIGN  15 humans · 7 agents ─────────────────────────
+  {id:'proddes',name:'Product',short:'PROD',color:'#A855F7',icon:'◎✦',desc:'Strategy, Roadmap, UX & Research',collapsed:false,roles:[
+    {id:'r3x', title:'VP of Product',                name:'',               type:'human',tags:['Product','UX'],         level:'VP'},
+    {id:'r18', title:'Head of Product',             name:'Nina Osei',      type:'human',tags:['Strategy','Roadmap'],   level:'Director'},
+    {id:'r24', title:'Head of Design',              name:'Carlos Mendez', type:'human',tags:['Creative Direction'],   level:'Director'},
+    {id:'r86', title:'UX Research Lead',            name:'Keiko Tanaka',  type:'human',tags:['Research','Insights'],  level:'Director'},
+    {id:'r83', title:'Senior Product Manager',      name:'',              type:'human',tags:['Strategy','Roadmap'],   level:'Senior', count:3},
+    {id:'r84', title:'Product Manager',             name:'',              type:'human',tags:['Features','Discovery'], level:'Senior',    count:4},
+    {id:'r87', title:'Senior UX Designer',          name:'',              type:'human',tags:['UX','Flows'],           level:'Senior', count:2},
+    {id:'r21', title:'AI Product Analyst',          name:'Insight',       type:'agent',tags:['Data','Analytics'],     cap:'Mines user data, surfaces insights to shape roadmap',                            owner:'Head of Product'},
+    {id:'r22', title:'AI Roadmap Planner',          name:'Compass',       type:'agent',tags:['Planning'],             cap:'Scores feature requests, synthesises customer feedback',                         owner:'Head of Product'},
+    {id:'r23', title:'AI User Researcher',          name:'Empathy',       type:'agent',tags:['Research'],             cap:'Synthetic user interviews, transcript analysis at scale',                        owner:'UX Research Lead'},
+    {id:'r28', title:'AI Design Assistant',         name:'Palette',       type:'agent',tags:['Generative'],           cap:'Generates visual concepts, iterates mockups from briefs',                        owner:'Senior UX Designer'},
+    {id:'r132',title:'AI Competitive Intel',        name:'Scan',          type:'agent',tags:['Competitive','Market'], cap:'Monitors competitor features, pricing moves and market shifts in real-time',      owner:'Head of Product'},
+    {id:'r133',title:'AI Specs Writer',             name:'Brief',         type:'agent',tags:['Specs','PRDs'],         cap:'Converts high-level goals into detailed product specs and acceptance criteria',   owner:'Product Manager'},
   ]},
-  {id:'sales',name:'Sales',short:'SALES',color:'#10B981',icon:'↗',desc:'Enterprise, SMB, Partnerships',collapsed:false,roles:[
-    {id:'r30',title:'VP Sales',name:'Rachel Kim',type:'human',tags:['Enterprise'],level:'VP'},
-    {id:'r31',title:'Account Executive',name:'Daniel Torres',type:'human',tags:['Enterprise','West'],level:'Senior'},
-    {id:'r32',title:'Account Executive',name:'Fiona Walsh',type:'human',tags:['Enterprise','East'],level:'Senior'},
-    {id:'r33',title:'Sales Dev Rep',name:'Owen Lee',type:'human',tags:['Outbound'],level:'Junior'},
-    {id:'r34',title:'AI Outbound Agent',name:'Pipeline',type:'agent',tags:['Prospecting'],cap:'Automates personalised outreach, qualifies inbound leads'},
-    {id:'r35',title:'AI Deal Coach',name:'Closer',type:'agent',tags:['Deal Intel'],cap:'Surfaces deal risks, suggests objection responses live'},
-    {id:'r36',title:'AI CRM Manager',name:'Sync',type:'agent',tags:['CRM'],cap:'Keeps CRM clean, auto-logs activity, generates call notes'},
+  // ── SALES  12h · 8a = 40% AI ────────────────────────────────────────
+  // AI owns the full pipeline ops stack: outbound, CRM, meeting prep, forecasting,
+  // contract drafts and win/loss analysis. Human team focuses exclusively on
+  // strategic relationships, negotiation and closing complex enterprise deals.
+  {id:'sales',name:'Sales',short:'SALES',color:'#10B981',icon:'↗',desc:'Enterprise & Strategic Accounts — AI owns pipeline ops',collapsed:false,roles:[
+    {id:'r30', title:'VP of Sales',                name:'Rachel Kim', type:'human',tags:['Revenue','Strategy'],    level:'VP'},
+    {id:'r92', title:'Head of Revenue Operations', name:'Jay Patel',  type:'human',tags:['RevOps','Strategy'],      level:'Director'},
+    {id:'r94', title:'Forward Deployed Engineer',   name:'',           type:'human',tags:['Pre-Sales','Technical'], level:'Senior', count:4},
+    {id:'r95', title:'Senior Account Executive',   name:'',           type:'human',tags:['Enterprise','Closing'],  level:'Senior', count:3},
+    {id:'r96', title:'Account Executive',          name:'',           type:'human',tags:['Pipeline','Closing'],    level:'Senior',    count:3},
+    {id:'r162',title:'CRM Manager',                name:'',           type:'human',tags:['CRM','RevOps'],          level:'Senior'},
+    {id:'r34', title:'AI Outbound Agent',          name:'Pipeline',   type:'agent',tags:['Prospecting'],           cap:'Automates personalised outreach sequences, qualifies inbound leads at scale',                      owner:'Senior Account Executive'},
+    {id:'r140',title:'AI SDR Agent',               name:'Prospect',   type:'agent',tags:['Outbound','LinkedIn'],   cap:'Dedicated outbound SDR — LinkedIn sequencing, email cadences, meeting booking',                   owner:'Senior Account Executive'},
+    {id:'r35', title:'AI Deal Coach',              name:'Closer',     type:'agent',tags:['Deal Intel'],            cap:'Live deal coaching — surfaces risks, objection responses and competitive traps mid-call',          owner:'Senior Account Executive'},
+    {id:'r36', title:'AI CRM Manager',             name:'Sync',       type:'agent',tags:['CRM'],                  cap:'Keeps CRM clean, auto-logs all activity, generates call notes and next steps',                   owner:'CRM Manager'},
+    {id:'r98', title:'AI Revenue Forecaster',      name:'Predict',    type:'agent',tags:['Forecasting','Pipeline'],cap:'Real-time pipeline analysis, close probability scoring and revenue forecasting',                  owner:'Head of Revenue Operations'},
+    {id:'r154',title:'AI Meeting Prep Agent',      name:'Brief',      type:'agent',tags:['Prep','Intel'],          cap:'Generates battle cards, customer intel and personalised agendas before every sales call',          owner:'Senior Account Executive'},
+    {id:'r155',title:'AI Contract Assistant',      name:'Draft',      type:'agent',tags:['Contracts','Legal'],     cap:'First-pass contract drafting, redlines and approval routing — cuts contract cycle by 60%',          owner:'Head of Revenue Operations'},
+    {id:'r156',title:'AI Win/Loss Analyst',        name:'Debrief',    type:'agent',tags:['Win/Loss','Coaching'],   cap:'Analyses every won and lost deal, surfaces patterns and feeds coaching insights to the team',       owner:'Head of Revenue Operations'},
   ]},
-  {id:'mkt',name:'Marketing',short:'MKT',color:'#F59E0B',icon:'◉',desc:'Content, Growth, Brand',collapsed:false,roles:[
-    {id:'r37',title:'Head of Content',name:'Isabel Fernandez',type:'human',tags:['Content'],level:'Director'},
-    {id:'r38',title:'Growth Lead',name:'Finn Larsen',type:'human',tags:['Growth','Paid'],level:'Director'},
-    {id:'r39',title:'AI Content Creator',name:'Scribe',type:'agent',tags:['Blog','Social'],cap:'Drafts blog posts, social content and ad copy at scale'},
-    {id:'r40',title:'AI SEO Agent',name:'Rank',type:'agent',tags:['SEO'],cap:'Optimises content for search, monitors rankings'},
-    {id:'r41',title:'AI Campaign Manager',name:'Amplify',type:'agent',tags:['Paid','A/B'],cap:'Manages ad spend, runs A/B tests, reports on ROAS'},
-    {id:'r42',title:'AI Brand Monitor',name:'Signal',type:'agent',tags:['Sentiment'],cap:'Tracks brand mentions and share of voice continuously'},
+  // ── MARKETING  8 humans · 6 agents ─────────────────────────────────
+  // Content writing, analytics and event logistics handled by AI
+  {id:'mkt',name:'Marketing',short:'MKT',color:'#F59E0B',icon:'◉',desc:'Growth, Product Marketing, DevRel & Community',collapsed:false,roles:[
+    {id:'r5x', title:'VP of Marketing',             name:'',                type:'human',tags:['Brand','Growth'],       level:'VP'},
+    {id:'r99', title:'Head of Marketing',         name:'Isabel Fernandez',type:'human',tags:['Content','Strategy'],   level:'Director'},
+    {id:'r38', title:'Growth Lead',               name:'Finn Larsen',    type:'human',tags:['Growth','Paid'],        level:'Director'},
+    {id:'r100',title:'Product Marketing Manager', name:'',               type:'human',tags:['PMM','Positioning'],    level:'Senior', count:2},
+    {id:'r157',title:'Developer Relations Lead',  name:'',               type:'human',tags:['DevRel','Community'],   level:'Senior'},
+    {id:'r39', title:'AI Content Creator',        name:'Scribe',         type:'agent',tags:['Blog','Social'],        cap:'Drafts blog posts, social content and ad copy at scale',                         owner:'Product Marketing Manager'},
+    {id:'r40', title:'AI SEO Agent',              name:'Rank',           type:'agent',tags:['SEO'],                  cap:'Optimises content for search, monitors rankings and surfaces gaps',               owner:'Growth Lead'},
+    {id:'r41', title:'AI Campaign Manager',       name:'Amplify',        type:'agent',tags:['Paid','A/B'],           cap:'Manages ad spend, runs A/B tests, reports on ROAS continuously',                  owner:'Product Marketing Manager'},
+    {id:'r42', title:'AI Brand Monitor',          name:'Signal',         type:'agent',tags:['Sentiment'],            cap:'Tracks brand mentions and share of voice continuously',                           owner:'Head of Marketing'},
+    {id:'r108',title:'AI PMM Agent',              name:'Narrate',        type:'agent',tags:['Positioning','Messaging'],cap:'Generates product messaging, competitive analysis and launch briefs',            owner:'Product Marketing Manager'},
+    {id:'r141',title:'AI Social & Events Agent',  name:'Engage',         type:'agent',tags:['Social','Events'],      cap:'Manages social channels, event logistics, community engagement and email campaigns',owner:'Developer Relations Lead'},
   ]},
-  {id:'finance',name:'Finance',short:'FIN',color:'#6366F1',icon:'⬡',desc:'FP&A, Accounting, Legal',collapsed:false,roles:[
-    {id:'r43',title:'VP Finance',name:'Hannah Brooks',type:'human',tags:['FP&A'],level:'VP'},
-    {id:'r44',title:'Financial Analyst',name:'Ethan Cross',type:'human',tags:['Modelling'],level:'Mid'},
-    {id:'r45',title:'Controller',name:'Mei Lin',type:'human',tags:['Accounting'],level:'Manager'},
-    {id:'r46',title:'AI Finance Assistant',name:'Ledger',type:'agent',tags:['Reconciliation'],cap:'Automates reconciliation, generates financial summaries'},
-    {id:'r47',title:'AI Forecasting Agent',name:'Oracle',type:'agent',tags:['Forecasting'],cap:'Scenario models, budget variance alerts in real-time'},
+  // ── FINANCE  7 humans · 5 agents ───────────────────────────────────
+  {id:'finance',name:'Finance',short:'FIN',color:'#6366F1',icon:'⬡',desc:'FP&A, Accounting & Legal',collapsed:false,roles:[
+    {id:'r4x', title:'VP of Finance',             name:'',               type:'human',tags:['Finance'],               level:'VP'},
+    {id:'r43', title:'Head of Finance',          name:'Hannah Brooks',  type:'human',tags:['FP&A','Strategy'],       level:'Director'},
+    {id:'r109',title:'Controller',               name:'Mei Lin',       type:'human',tags:['Accounting','Compliance'],level:'Senior'},
+    {id:'r114',title:'Legal Counsel',            name:'Jordan Taylor', type:'human',tags:['Contracts','Compliance'], level:'Senior'},
+    {id:'r110',title:'Senior Financial Analyst', name:'',              type:'human',tags:['FP&A','Modelling'],       level:'Senior', count:2},
+    {id:'r113',title:'Senior Accountant',        name:'',              type:'human',tags:['Accounting'],             level:'Senior',    count:1},
+    {id:'r46', title:'AI Finance Assistant',     name:'Ledger',        type:'agent',tags:['Reconciliation'],         cap:'Automates reconciliation, month-end close tasks and financial summaries',          owner:'Controller'},
+    {id:'r47', title:'AI Forecasting Agent',     name:'Oracle',        type:'agent',tags:['Forecasting'],            cap:'Scenario models, budget variance alerts and rolling forecasts in real-time',        owner:'Senior Financial Analyst'},
+    {id:'r115',title:'AI Legal Research Agent',  name:'Counsel',       type:'agent',tags:['Legal','Contracts'],      cap:'Contract review, regulatory research and compliance monitoring',                    owner:'Legal Counsel'},
+    {id:'r142',title:'AI Payroll & Expenses',    name:'Pay',           type:'agent',tags:['Payroll','Expenses'],     cap:'Processes payroll runs, handles expense approvals, flags anomalies automatically',  owner:'Controller'},
+    {id:'r143',title:'AI Tax & Compliance',      name:'Audit',         type:'agent',tags:['Tax','Compliance'],       cap:'Tracks regulatory changes, prepares tax workpapers, flags compliance risks early',  owner:'Head of Finance'},
   ]},
-  {id:'ops',name:'Operations',short:'OPS',color:'#14B8A6',icon:'⟳',desc:'IT, Workplace, Process',collapsed:false,roles:[
-    {id:'r48',title:'VP Operations',name:'Victor Nkosi',type:'human',tags:['IT','Process'],level:'VP'},
-    {id:'r49',title:'Ops Manager',name:'Clara Schmidt',type:'human',tags:['Process','Scaling'],level:'Manager'},
-    {id:'r59',title:'IT Manager',name:'Dev Patel',type:'human',tags:['IT','Infrastructure'],level:'Manager'},
-    {id:'r60',title:'Workplace Lead',name:'Suki Park',type:'human',tags:['Facilities','Vendor'],level:'Manager'},
-    {id:'r51',title:'AI Ops Analyst',name:'Streamline',type:'agent',tags:['Process Mining'],cap:'Identifies bottlenecks, recommends efficiency improvements'},
-    {id:'r53',title:'AI IT Support',name:'Helpdesk',type:'agent',tags:['IT','Tier-1'],cap:'Resolves tier-1 IT issues, provisions access instantly'},
-    {id:'r61',title:'AI Vendor Manager',name:'Procure',type:'agent',tags:['Procurement','Contracts'],cap:'Manages vendor renewals, benchmarks pricing, flags contract risks'},
+  // ── OPERATIONS  7 humans · 5 agents ────────────────────────────────
+  {id:'ops',name:'Operations',short:'OPS',color:'#14B8A6',icon:'⟳',desc:'IT, Workplace & AI Tooling/Spend',collapsed:false,roles:[
+    {id:'r7x', title:'Chief Operating Officer',  name:'James Okafor',   type:'human',tags:['Operations'],             level:'C-Suite'},
+    {id:'r48', title:'Head of Operations',       name:'Victor Nkosi',   type:'human',tags:['IT','Process'],           level:'Director'},
+    {id:'r49', title:'Operations Lead',          name:'Clara Schmidt', type:'human',tags:['Process','Scaling'],      level:'Senior'},
+    {id:'r116',title:'IT Support Engineer',      name:'',              type:'human',tags:['IT','Support'],           level:'Senior',    count:2},
+    {id:'r118',title:'Head of AI & Business Systems', name:'Pat Chen',  type:'human',tags:['AI Tooling','Spend','Automation'], level:'Director'},
+    {id:'r51', title:'AI Ops Analyst',           name:'Streamline',    type:'agent',tags:['Process Mining'],         cap:'Identifies bottlenecks, recommends efficiency improvements continuously',              owner:'Operations Lead'},
+    {id:'r53', title:'AI IT Support',            name:'Helpdesk',      type:'agent',tags:['IT','Tier-1'],            cap:'Resolves tier-1 IT issues, provisions access instantly, deflects 70% of tickets',      owner:'Head of AI & Business Systems'},
+    {id:'r61', title:'AI Vendor Manager',        name:'Procure',       type:'agent',tags:['Procurement','Contracts'], cap:'Manages vendor renewals, benchmarks pricing, flags contract risks',                   owner:'Head of AI & Business Systems'},
+    {id:'r121',title:'AI Business Systems Agent',name:'Automate',      type:'agent',tags:['Systems','Automation'],   cap:'Manages SaaS/AI stack, tracks spend vs ROI, surfaces unused tools and automation opportunities', owner:'Head of AI & Business Systems'},
+    {id:'r144',title:'AI IT Monitor',            name:'Watch',         type:'agent',tags:['Monitoring','Infra'],     cap:'Proactive infrastructure monitoring — predicts failures before users are impacted',      owner:'Head of AI & Business Systems'},
   ]},
-  {id:'people',name:'People & HR',short:'PEOPLE',color:'#F472B6',icon:'❋',desc:'Talent, Culture, Development',collapsed:false,roles:[
-    {id:'r54',title:'Chief People Officer',name:'Tanya Williams',type:'human',tags:['Culture','Strategy'],level:'C-Suite'},
-    {id:'r55',title:'Head of Talent',name:'Priya Mehta',type:'human',tags:['Hiring','TA'],level:'Director'},
-    {id:'r56',title:'L&D Lead',name:'Jordan Brooks',type:'human',tags:['Learning','Development'],level:'Manager'},
-    {id:'r52',title:'AI Onboarding Agent',name:'Welcome',type:'agent',tags:['Onboarding'],cap:'End-to-end new hire onboarding automation'},
-    {id:'r57',title:'AI People Analytics',name:'Pulse',type:'agent',tags:['Analytics','Retention'],cap:'Tracks engagement signals, flags attrition risk, models headcount scenarios'},
-    {id:'r58',title:'AI Learning Coach',name:'Mentor',type:'agent',tags:['L&D','Coaching'],cap:'Personalised learning paths, skill gap analysis, performance nudges'},
+  // ── PEOPLE & TALENT  5 humans · 7 agents ───────────────────────────────
+  {id:'people',name:'People & Talent',short:'People',color:'#F472B6',icon:'❋',desc:'Talent, Recruiting & People Ops',collapsed:false,roles:[
+    {id:'r54c',title:'VP of People & Talent',         name:'Sarah Okonkwo',  type:'human',tags:['Culture','People','Talent'], level:'VP'},
+    {id:'r55', title:'Head of Talent',                name:'Priya Mehta',    type:'human',tags:['Hiring','TA'],             level:'Director'},
+    {id:'r62', title:'Senior Recruiter',            name:'Liam Torres',    type:'human',tags:['Sourcing','Interviews'],   level:'Senior'},
+    {id:'r124',title:'HR Business Partner',         name:'Aisha Nwosu',    type:'human',tags:['HRBP','Employee Relations'],level:'Senior'},
+    {id:'r158',title:'HR Generalist',               name:'Tom Eriksson',   type:'human',tags:['HR Ops','Employee Experience'],level:'Senior'},
+    {id:'r63', title:'AI Sourcing Agent',           name:'Scout',          type:'agent',tags:['Sourcing','Outreach'],     cap:'Finds and qualifies candidates from LinkedIn, job boards and referrals',               owner:'Senior Recruiter'},
+    {id:'r64', title:'AI Interview Scheduler',      name:'Coordinate',     type:'agent',tags:['Scheduling','TA'],         cap:'Handles all interview logistics — calendar coordination, reminders, panel briefings',   owner:'Senior Recruiter'},
+    {id:'r52', title:'AI Onboarding Agent',         name:'Welcome',        type:'agent',tags:['Onboarding'],              cap:'End-to-end new hire onboarding automation — day 1 to 90-day ramp',                    owner:'HR Generalist'},
+    {id:'r57', title:'AI People Analytics',         name:'Pulse',          type:'agent',tags:['Analytics','Retention'],   cap:'Tracks engagement signals, flags attrition risk, models headcount scenarios',           owner:'VP of People & Talent'},
+    {id:'r58', title:'AI Learning Coach',           name:'Mentor',         type:'agent',tags:['L&D','Coaching'],          cap:'Personalised learning paths, skill gap analysis, performance nudges',                  owner:'HR Business Partner'},
+    {id:'r145',title:'AI Performance Review',       name:'Review',         type:'agent',tags:['Performance','Feedback'],  cap:'Collects 360 feedback, synthesises review data, surfaces patterns for managers',       owner:'HR Business Partner'},
+    {id:'r146',title:'AI Comp & Benefits',          name:'Reward',         type:'agent',tags:['Comp','Benefits'],         cap:'Benchmarks compensation, models total reward scenarios, flags pay equity gaps',        owner:'VP of People & Talent'},
+    {id:'r159',title:'AI HR Ops Agent',             name:'Assist',         type:'agent',tags:['HR Ops','Helpdesk'],       cap:'Handles employee queries, policy lookups, offboarding workflows and document requests — deflects 80% of HR helpdesk tickets', owner:'HR Generalist'},
   ]},
 ];
 
@@ -563,6 +633,8 @@ const ORCH = [
   {id:'o4',title:'AI Knowledge Base',name:'Memory',serves:['ALL'],desc:'Institutional memory — surfaces docs, decisions, prior context'},
   {id:'o5',title:'AI Workflow Orchestrator',name:'Flow',serves:['ALL'],desc:'Coordinates multi-step cross-functional AI agent workflows'},
   {id:'o6',title:'AI Anomaly Detector',name:'Radar',serves:['ENG','FIN','OPS'],desc:'Detects anomalies across systems, metrics, spending patterns'},
+  {id:'o7',title:'AI Strategy Analyst',name:'Foresight',serves:['EXEC','SALES','MKT'],desc:'Cross-functional strategic analysis, competitive landscape and scenario planning for leadership'},
+  {id:'o8',title:'AI Dependency Mapper',name:'Bridge',serves:['ALL'],desc:'Maps cross-team dependencies in real-time, surfaces blockers and keeps projects moving'},
 ];
 
 // ════════════════════════════════════════════════
@@ -593,9 +665,12 @@ function automationPotential(role) {
   if (role.type === 'agent') return 'done';
   const title = (role.title + ' ' + (role.tags||[]).join(' ')).toLowerCase();
   const level = (role.level || '').toLowerCase();
+  // Directors and above: strategic, relational — human-essential
   if (['c-suite','vp','director'].includes(level)) return 'low';
-  if (/strategy|vision|culture|ethics|leadership|creative|brand|partnership|relationships/.test(title)) return 'low';
-  if (/reconcil|report|data entry|qa|test|documentation|scheduling|monitor|scan|audit|logging/.test(title)) return 'high';
+  // Topic signals that require sustained human judgment
+  if (/vision|culture|ethics|leadership|creative.direct|partnership|relationship/.test(title)) return 'low';
+  // High automation potential: repetitive, data-driven, infra, monitoring, rules-based
+  if (/reconcil|reporting|\bqa\b|testing|documentation|scheduling|monitor|scan|audit|logging|devops|\bsre\b|ci.cd|infrastructure|etl\b|pipelines|revops|analytics|forecasting|revenue.oper|\banalyst\b/.test(title)) return 'high';
   return 'mid';
 }
 // Automate / Augment / Advise — McKinsey/BCG AI opportunity framework
@@ -603,17 +678,20 @@ function autoBadgeHTML(auto) {
   if (auto === 'done') return '<span class="auto-badge auto-done">⚡ AI-Native</span>';
   if (auto === 'high') return '<span class="auto-badge auto-high">🚀 Automate</span>';
   if (auto === 'mid')  return '<span class="auto-badge auto-mid">⊕ Augment</span>';
-  return '<span class="auto-badge auto-low">♥ Advise</span>';
+  return ''; // Advise is the default human state — no badge needed
 }
 function autoColor(auto) {
   if (auto === 'done') return 'var(--agent)';
   if (auto === 'high') return 'var(--agent)';   // teal = opportunity
-  if (auto === 'mid')  return 'var(--accent)';  // orange = collaboration
+  if (auto === 'mid')  return 'var(--orange)';  // orange = collaboration
   return 'var(--human)';                         // purple = human-essential
 }
 function calcStats() {
   let h=0, a=0;
-  S.depts.forEach(d => d.roles.forEach(r => r.type==='human' ? h++ : a++));
+  S.depts.forEach(d => d.roles.forEach(r => {
+    const n = r.count || 1;
+    r.type==='human' ? h+=n : a+=n;
+  }));
   a += ORCH.length;
   return {h, a, total: h+a, pct: h+a > 0 ? Math.round(a/(h+a)*100) : 0};
 }
@@ -624,10 +702,12 @@ function updateHeaderStats() {
   document.getElementById('s-r').textContent = pct + '%';
 }
 function calcSpanOfControl(dept) {
-  const managers = dept.roles.filter(r => r.type==='human' && ['VP','Manager','Director','C-Suite'].includes(r.level||''));
-  if (managers.length === 0) return null;
-  const reports = dept.roles.filter(r => !['VP','C-Suite'].includes(r.level||''));
-  return managers.length > 0 ? +(reports.length / managers.length).toFixed(1) : null;
+  const mgrs = dept.roles.filter(r => r.type==='human' && ['VP','Manager','Director','C-Suite'].includes(r.level||''));
+  if (mgrs.length === 0) return null;
+  const mgrCount = mgrs.reduce((s,r) => s+(r.count||1), 0);
+  const reports  = dept.roles.filter(r => !['VP','C-Suite'].includes(r.level||''));
+  const repCount = reports.reduce((s,r) => s+(r.count||1), 0);
+  return mgrCount > 0 ? +(repCount / mgrCount).toFixed(1) : null;
 }
 function deptHasAgents(dept) {
   return dept.roles.some(r => r.type === 'agent');
@@ -674,8 +754,10 @@ function renderHealthBar() {
   });
   const avgSpan = spanCount > 0 ? (totalSpan/spanCount).toFixed(1) : '—';
   const spanOk = avgSpan >= 4 && avgSpan <= 15; // wider with AI agents
-  // Count layers (rough: C-Suite, VP, Manager, IC = 3-4)
-  const layers = 4;
+  // Count distinct org layers from role levels
+  const levelOrder = ['C-Suite','VP','Director','Senior','Mid'];
+  const presentLevels = new Set(S.depts.flatMap(d => d.roles.map(r => r.level)).filter(Boolean));
+  const layers = levelOrder.filter(l => presentLevels.has(l)).length || presentLevels.size;
   // Automation ratio
   const autoOk = pct >= 20 && pct <= 60;
 
@@ -711,16 +793,16 @@ function renderHealthBar() {
 function renderTiles() {
   const grid = document.getElementById('tile-grid');
   const tiles = S.depts.map(dept => {
-    const h = dept.roles.filter(r=>r.type==='human').length;
-    const a = dept.roles.filter(r=>r.type==='agent').length;
-    const total = dept.roles.length;
+    const h = dept.roles.filter(r=>r.type==='human').reduce((s,r)=>s+(r.count||1),0);
+    const a = dept.roles.filter(r=>r.type==='agent').reduce((s,r)=>s+(r.count||1),0);
+    const total = h + a;
     const pct = total > 0 ? Math.round(a/total*100) : 0;
     const preview = dept.roles.slice(0,4);
     const span = calcSpanOfControl(dept);
     const spanCl = spanClass(span, deptHasAgents(dept));
     const hasAgents = deptHasAgents(dept);
     const spanTip = span !== null
-      ? 'Span of control: ' + span + ' direct reports per manager. ' + (hasAgents ? 'AI agents expand healthy spans to 10–15 (vs 5–8 traditional).' : 'Traditional guideline: 5–8 direct reports per manager.')
+      ? 'Span of control: ' + span + ' direct reports per leader. ' + (hasAgents ? 'In a 3-layer AI-native org, healthy spans reach 15–20 (vs 5–8 traditional) — AI handles coordination, reporting and admin.' : 'Traditional guideline: 5–8 direct reports per manager.')
       : '';
 
     const roleRows = preview.map(r => {
@@ -728,7 +810,7 @@ function renderTiles() {
       const dot = r.type==='agent' ? 'var(--agent)' : autoColor(auto);
       return '<div class="tile-role-row">'
         + '<div class="tile-role-dot" style="background:' + dot + '"></div>'
-        + '<span>' + esc(r.title) + '</span>'
+        + '<span>' + esc(r.title) + ((r.count||1)>1 ? ' <span style="color:var(--t3)">×'+r.count+'</span>' : '') + '</span>'
         + '<span style="margin-left:auto;font-size:9px;color:var(--t2)">' + (r.type==='agent' ? '⚡' : '') + '</span>'
         + '</div>';
     }).join('');
@@ -767,11 +849,11 @@ function renderRecs() {
   const {pct} = calcStats();
   const recs = [
     {title:'Automate · Augment · Advise', body:'The three AI opportunity tiers: Automate = hand the task entirely to an agent (repetitive, rules-based). Augment = human + AI working in tandem (knowledge work). Advise = AI provides data, human decides (strategic, relational). Tag every role to one tier before redesigning.'},
-    {title:'Wider Spans with AI Agents', body:'Traditional rule: 5–8 directs per manager. With AI handling coordination overhead — status updates, meeting prep, reporting, first-draft reviews — effective spans can safely reach 10–15. Recalibrate your norms department by department based on how much agent support each manager has.'},
+    {title:'Wider Spans with AI Agents', body:'Traditional rule: 5–8 directs per manager. In a 3-layer AI-native org, that changes fundamentally. With AI absorbing coordination overhead — status updates, meeting prep, reporting, first-draft reviews, scheduling — healthy spans reach 15–20 per leader. A Head of Engineering with 30+ ICs is viable when AI handles the admin layer. Recalibrate department by department based on AI agent coverage.'},
     {title:'The Player-Coach is Now the Default', body:'AI absorbs admin and coordination work, freeing every manager to contribute individually again. Design roles assuming managers spend 50–60% doing IC work themselves. This compresses layers, accelerates delivery, and keeps senior talent engaged in real problems rather than governance.'},
     {title:'Org Layers & Design', body:'Target 3–5 layers CEO to front-line. Each extra layer costs ~25% in coordination overhead. As AI agents handle cross-team handoffs, orgs can run flatter. Test: can a team operate autonomously for a week without escalation? If yes, it may not need its own management layer.'},
     {title:'AI Agent Placement', body:'Never create a standalone "AI team". Agents belong inside functional departments — each team owns and is accountable for its agents. Cross-cutting infrastructure (data, compliance, comms) sits in the Orchestration Layer. Distributed ownership drives faster iteration and clearer accountability.'},
-    {title:'Future-State Workforce Planning', body:'Build current-state, then model future-state: what does the org look like with 40% of operational roles automated or augmented? Present the human-vs-agent delta to leadership as a 12–24 month workforce roadmap with a reskilling path for displaced roles.'},
+    {title:'Future-State Workforce Planning', body:'AI-native tech companies are targeting 35–45% agent coverage by 2026. Engineering teams shrink by ~40% as pair-programming AI absorbs routine coding. Sales teams halve their SDR headcount as outbound agents run 24/7. Build your future-state org first, then work backwards to a 12–24 month workforce roadmap — with reskilling paths for every displaced role.'},
   ];
   document.getElementById('recs-grid').innerHTML = recs.map(r =>
     `<div class="rec-card"><strong>${r.title}</strong>${r.body}</div>`
@@ -819,7 +901,7 @@ function renderDepts() {
         </div>
         <div class="dc-meta">
           <span class="dc-cnt">${visible.length}</span>
-          ${span !== null ? `<span class="span-warn span-tip ${spanCl}" data-tip="Span of control: ${span} direct reports per manager. ${deptHasAgents(dept) ? 'With AI agents, healthy spans reach 10–15 (vs 5–8 traditional).' : 'Traditional guideline: 5–8 per manager.'}">⊛ ${span}</span>` : ''}
+          ${span !== null ? `<span class="span-warn span-tip ${spanCl}" data-tip="Span of control: ${span} direct reports per leader. ${deptHasAgents(dept) ? 'In a 3-layer AI-native org, healthy spans reach 15–20 (vs 5–8 traditional) — AI handles coordination, reporting and admin.' : 'Traditional guideline: 5–8 per manager.'}">⊛ ${span}</span>` : ''}
           <button class="dc-edbtn" onclick="editDept('${dept.id}')">✎</button>
           <button class="dc-tgl" onclick="toggleDept('${dept.id}')">${dept.collapsed?'▶':'▾'}</button>
         </div>
@@ -850,10 +932,14 @@ function cardHTML(r, deptId) {
          ondblclick="editRole('${r.id}','${deptId}')">
       <div class="rc-top">
         <div class="rc-title">${r.title}</div>
-        ${isAgent ? `<span class="badge ba">⚡ AI</span>` : `<span class="badge" style="${humanBadgeStyle}">♥</span>`}
+        <div style="display:flex;gap:3px;align-items:center;flex-shrink:0">
+          ${(r.count||1)>1 ? `<span class="badge" style="background:rgba(255,255,255,.06);color:var(--t2);border:1px solid var(--b)">×${r.count}</span>` : ''}
+          ${isAgent ? `<span class="badge ba">⚡ AI</span>` : `<span class="badge" style="${humanBadgeStyle}">♥</span>`}
+        </div>
       </div>
       <div class="rc-name">${r.name}</div>
       ${isAgent && r.cap ? `<div class="rc-cap">${r.cap}</div>` : ''}
+      ${isAgent && r.owner ? `<div class="rc-owner">${r.owner}</div>` : ''}
       <div class="rc-tags">
         ${r.level ? `<span class="tag">${r.level}</span>` : ''}
         ${(r.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
